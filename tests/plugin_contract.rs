@@ -43,15 +43,15 @@ fn plugin_manifests_share_identity_and_connection_settings() {
     assert!(claude["repository"]
         .as_str()
         .unwrap()
-        .ends_with("/arcane-rmcp"));
+        .ends_with("/rarcane"));
     assert!(codex["repository"]
         .as_str()
         .unwrap()
-        .ends_with("/arcane-rmcp"));
+        .ends_with("/rarcane"));
     assert!(gemini["repository"]
         .as_str()
         .unwrap()
-        .ends_with("/arcane-rmcp"));
+        .ends_with("/rarcane"));
 
     let user_config = claude["userConfig"].as_object().unwrap();
     for key in [

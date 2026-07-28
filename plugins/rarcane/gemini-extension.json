@@ -2,7 +2,7 @@
   "name": "rarcane-mcp",
   "description": "Rust MCP server for Arcane Docker management — manage containers, images, networks, volumes, and compose projects.",
   "author": "Jacob Magar",
-  "repository": "https://github.com/jmagar/rarcane",
+  "repository": "https://github.com/dinglebear-ai/rarcane",
   "license": "MIT",
   "keywords": ["rarcane", "arcane", "docker", "containers", "homelab", "mcp"],
   "contextFileName": "GEMINI.md",

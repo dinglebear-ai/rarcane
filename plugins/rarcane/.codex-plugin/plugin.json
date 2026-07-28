@@ -1,8 +1,8 @@
 {
   "name": "rarcane-mcp",
   "description": "Rust MCP server for Arcane Docker management — manage containers, images, networks, volumes, compose projects, and more.",
-  "homepage": "https://github.com/jmagar/rarcane",
-  "repository": "https://github.com/jmagar/rarcane",
+  "homepage": "https://github.com/dinglebear-ai/rarcane",
+  "repository": "https://github.com/dinglebear-ai/rarcane",
   "license": "MIT",
   "keywords": [
     "rarcane",
@@ -23,7 +23,7 @@
       "Read",
       "Write"
     ],
-    "websiteURL": "https://github.com/jmagar/rarcane",
+    "websiteURL": "https://github.com/dinglebear-ai/rarcane",
     "defaultPrompt": [
       "List all running Docker containers.",
       "Show me the Arcane and rarcane configuration status.",
