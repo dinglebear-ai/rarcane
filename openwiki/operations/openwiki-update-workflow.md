@@ -20,29 +20,32 @@ The OpenWiki workflow in this repository performs periodic and on-demand documen
 The workflow is defined in [`.github/workflows/openwiki-update.yml`](../../.github/workflows/openwiki-update.yml) and:
 
 - runs on `workflow_dispatch` and a daily UTC schedule (`cron: 0 8 * * *`),
-- connects to the private API over Tailscale and verifies that API before generation,
-- installs Node.js 22 and OpenWiki 0.2.0,
-- executes `openwiki --update --print`, and
-- uses the OpenAI-compatible provider at `http://100.120.242.29:8317/v1` with the `gpt-5.3-codex-spark` model.
+- runs on `ubuntu-latest` with Node.js 22,
+- installs OpenWiki via `npm install --global openwiki`,
+- executes `openwiki code --update --print`, and
+- uses `OPENWIKI_PROVIDER=openrouter` with `OPENWIKI_MODEL_ID=z-ai/glm-5.2`.
 
 ## Environment and tracing
 
-The job uses these relevant secrets and environment variables:
+The job uses these relevant variables and secrets:
 
-- `TS_OAUTH_CLIENT_ID` and `TS_OAUTH_SECRET` connect the runner to Tailscale,
-- `OPENAI_COMPATIBLE_API_KEY` authenticates to the configured API,
-- `OPENAI_COMPATIBLE_BASE_URL=http://100.120.242.29:8317/v1`, and
-- `OPENWIKI_PROVIDER=openai-compatible` with `OPENWIKI_MODEL_ID=gpt-5.3-codex-spark`.
-
-Before running OpenWiki, the workflow calls the API's `/models` endpoint and fails if credentials are absent or the endpoint does not return HTTP 200.
+- `OPENROUTER_API_KEY` to authenticate to OpenRouter,
+- `OPENWIKI_PROVIDER=openrouter`,
+- `OPENWIKI_MODEL_ID=z-ai/glm-5.2`, and
+- optional tracing fields (`LANGSMITH_API_KEY`, `LANGCHAIN_PROJECT`, `LANGCHAIN_TRACING_V2`) for observability.
 
 ## Pull request automation
 
-The workflow uses `peter-evans/create-pull-request` to collect the generated `openwiki` directory on the `openwiki/update` branch. Other repository files are not included by its `add-paths` setting.
+The workflow uses `peter-evans/create-pull-request` to post generated documentation updates to the `openwiki/update` branch. The `add-paths` scope includes:
+
+- `openwiki`
+- `AGENTS.md`
+- `CLAUDE.md`
+- `.github/workflows/openwiki-update.yml`
 
 ## Source-level context
 
-The workflow file is the source of truth for its schedule, provider, command, network setup, and pull request paths. Regenerate these pages after changing that workflow.
+The workflow file is the source of truth for schedule, provider, model, command, and pull-request paths. Regenerate the linked docs after changing that workflow.
 
 ## Cross-links
 
