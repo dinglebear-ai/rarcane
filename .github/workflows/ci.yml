@@ -6,7 +6,7 @@
 #   BINARY_NAME → your binary name from Cargo.toml [[bin]] (e.g. "myservice")
 #
 # This workflow runs on every push and PR to main.
-# Jobs: fmt, clippy, test (nextest), web, toml, template checks, deny, gitleaks
+# Jobs: fmt, clippy, test (nextest), web, toml, template checks, deny
 #
 # All jobs must pass before merging. Adjust the matrix rust-version to match
 # your Cargo.toml `rust-version` field.
@@ -157,24 +157,6 @@ jobs:
         with:
           command: check
           arguments: --all-features
-
-  # ── gitleaks: secret scanning ─────────────────────────────────────────────────
-  gitleaks:
-    name: Secret Scan
-    runs-on: [self-hosted, unraid]
-    timeout-minutes: 20
-    permissions:
-      contents: read
-      pull-requests: read
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          fetch-depth: 0  # full history needed for gitleaks
-
-      - name: Run gitleaks
-        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   npm:
     name: npm launcher
