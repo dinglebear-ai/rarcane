@@ -151,10 +151,10 @@ fn extract_action_names(text: &str) -> Vec<String> {
         } else {
             None
         };
-        if let Some(action) = literal {
-            if !actions.contains(&action) {
-                actions.push(action);
-            }
+        if let Some(action) = literal
+            && !actions.contains(&action)
+        {
+            actions.push(action);
         }
     }
     actions
