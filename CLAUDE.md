@@ -11,8 +11,8 @@ vulnerability scanning, and system operations.
 |---|---|
 | Repository | `git@github.com:dinglebear-ai/rarcane.git` (default branch `main`) |
 | Cargo workspace | 2 members: `.` (the `rarcane` crate) and `xtask` |
-| Edition / MSRV | 2021 / Rust 1.90 |
-| MCP runtime | `rmcp` 2.2.0 |
+| Edition / MSRV | 2024 / Rust 1.97.1 |
+| MCP runtime | `rmcp = "=3.0.0-beta.2"` (exact pin) |
 | Binary / CLI | `rarcane` |
 | npm package | `arcane-rmcp` (`packages/arcane-rmcp/`) |
 | MCP tool name | `arcane` (one action-dispatched tool) |

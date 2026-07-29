@@ -14,8 +14,8 @@
 [package]
 name = "xtask"
 version = "0.4.4"
-edition = "2024"
-rust-version = "1.92"
+edition.workspace = true
+rust-version.workspace = true
 # Exclude from crates.io — this is a private automation crate.
 publish = false
 

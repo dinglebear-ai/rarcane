@@ -93,7 +93,7 @@ jobs:
       - name: Install pinned Rust toolchain + soldr
         uses: ./.github/actions/setup-rust-soldr
         with:
-          toolchain: 1.96.0
+          toolchain: 1.97.1
           targets: ${{ matrix.target }}
       - name: Install pinned cross toolchain
         if: matrix.target == 'x86_64-pc-windows-msvc'
