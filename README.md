@@ -84,10 +84,10 @@ registered as `rarcane`, but the tool clients call is `arcane`.
 | Path | Command | Best for | Notes |
 |---|---|---|---|
 | npm / npx | `npx -y arcane-rmcp --help` | Local MCP clients and quick trials. | Downloads the matching `rarcane` binary from GitHub Releases. |
-| Release installer | `curl -fsSL https://raw.githubusercontent.com/jmagar/rarcane/main/scripts/install.sh \| bash` | Host installs without Node. | Installs `rarcane` for the current Linux host. |
+| Release installer | `curl -fsSL https://raw.githubusercontent.com/dinglebear-ai/rarcane/main/scripts/install.sh \| bash` | Host installs without Node. | Installs `rarcane` for the current Linux host. |
 | Docker / Compose | `docker compose up -d` | Shared HTTP MCP deployments. | Reads `.env` and exposes container port `40110`. |
 | Build from source | `cargo build --release` | Development and audits. | Produces `target/release/rarcane`. |
-| Plugin | `claude plugin install plugins/rarcane` | Claude Code local plugin setup from this checkout. | Uses the packaged setup hook, skill, and monitor metadata. |
+| Plugin | `claude plugin install plugins/rarcane` | Claude Code local plugin setup from this checkout. | Uses the packaged skill and monitor metadata. The plugin ships no lifecycle hooks — run `rarcane setup repair` once after install. |
 
 ### npm / npx
 
@@ -112,8 +112,8 @@ behavior only when testing packaging:
 ### Build From Source
 
 ```bash
-git clone https://github.com/jmagar/rarcane
-cd arcane-rmcp
+git clone https://github.com/dinglebear-ai/rarcane
+cd rarcane
 cargo build --release
 ./target/release/rarcane --help
 ```
@@ -249,11 +249,11 @@ most domains, a required `subaction`.
 | `elicit_name` | MCP elicitation demonstration | `rarcane:read` |
 | `scaffold_intent` | side-effect-free scaffold planning handoff | `rarcane:read` |
 | `environment` | `list`, `get`, `create`, `update`, `delete`, `test` | read/write |
-| `project` | `list`, `get`, `create`, `up`, `down`, `restart`, `pull`, `destroy`, `redeploy`, `build` | read/write |
+| `project` | `list`, `get`, `create`, `update`, `up`, `down`, `restart`, `pull`, `destroy`, `redeploy`, `build` | read/write |
 | `container` | `list`, `get`, `create`, `start`, `stop`, `restart`, `update`, `delete`, `stats` | read/write |
 | `image` | `list`, `get`, `pull`, `delete`, `prune`, `scan` | read/write |
 | `network` | `list`, `get`, `create`, `delete`, `prune` | read/write |
-| `volume` | `list`, `get`, `create`, `delete`, `prune`, `browse`, backup and restore actions | read/write |
+| `volume` | `list`, `get`, `create`, `delete`, `prune`, `browse`, `list-backups`, `create-backup`, `delete-backup`, `restore`, `restore-files` | read/write |
 | `system` | `docker-info`, `prune`, `start-all`, `stop-all`, `convert` | read/write |
 | `image-update` | `check-all`, `check`, `check-batch`, `summary` | read |
 | `vulnerability` | `summary`, `list`, `scanner-status`, `ignore`, `unignore`, `list-ignored` | read/write |
@@ -323,7 +323,11 @@ Containers read `/data/.env`, `/data/config.toml`, and process env.
 | `RARCANE_NOAUTH` | `false` | Trust an upstream gateway to enforce auth. |
 | `RARCANE_MCP_ALLOWED_HOSTS` | unset | Extra accepted Host header values. |
 | `RARCANE_MCP_ALLOWED_ORIGINS` | unset | Extra accepted CORS origins. |
+| `RARCANE_MCP_PUBLIC_URL` | unset | Public base URL for OAuth issuer metadata. |
 | `RARCANE_MCP_AUTH_MODE` | `bearer` | `bearer` or `oauth`. |
+| `RARCANE_MCP_ALLOW_DESTRUCTIVE` | `false` | Bypass the per-call destructive confirmation gate. Do not set in shared deployments. |
+| `RARCANE_HOME` | `~/.rarcane` | Config/appdata root override. |
+| `RUST_LOG` | `info` | Log filter. |
 
 ## Authentication
 
@@ -396,10 +400,9 @@ npm --prefix packages/arcane-rmcp run check
 ## Verification
 
 ```bash
-python3 /home/jmagar/workspace/soma/scripts/check-readme-guide.py README.md
+just verify                 # fmt-check → lint → check → test
+just template-check         # patterns, plugin layout, schema docs, scaffold contract
 npm --prefix packages/arcane-rmcp run check
-cargo check
-cargo test
 git diff --check
 ```
 
@@ -450,19 +453,19 @@ gateway.
 
 ## Related Servers
 
-- [soma](https://github.com/jmagar/soma) - RMCP runtime for provider-backed MCP servers.
-- [unifi-rmcp](https://github.com/jmagar/runifi) - UniFi controller REST API bridge.
-- [tailscale-rmcp](https://github.com/jmagar/rtailscale) - Tailscale API bridge for devices, users, and tailnet operations.
-- [unraid-rmcp](https://github.com/jmagar/runraid) - Unraid GraphQL bridge for NAS and server management.
-- [apprise-rmcp](https://github.com/jmagar/rapprise) - Apprise notification fan-out bridge for many delivery backends.
-- [gotify-rmcp](https://github.com/jmagar/rgotify) - Gotify push notification bridge for sends, messages, apps, and clients.
-- [yarr](https://github.com/jmagar/yarr) - Media-stack bridge for Sonarr, Radarr, Prowlarr, Plex, and related services.
-- [ytdl-rmcp](https://github.com/jmagar/rytdl) - Media download and metadata workflow server.
-- [synapse-rmcp](https://github.com/jmagar/synapse) - Local Synapse workflow server for scout and flux actions.
-- [cortex](https://github.com/jmagar/cortex) - Syslog and homelab log aggregation MCP server.
-- [axon](https://github.com/jmagar/axon) - RAG, crawl, scrape, extract, and semantic search project.
-- [labby](https://github.com/jmagar/labby) - Homelab control plane and MCP gateway project.
-- [lumen](https://github.com/jmagar/lumen) - Local semantic code search MCP server.
+- [soma](https://github.com/dinglebear-ai/soma) - RMCP runtime for provider-backed MCP servers.
+- [unifi-rmcp](https://github.com/dinglebear-ai/runifi) - UniFi controller REST API bridge.
+- [tailscale-rmcp](https://github.com/dinglebear-ai/rtailscale) - Tailscale API bridge for devices, users, and tailnet operations.
+- [unraid](https://github.com/dinglebear-ai/unraid) - Unraid GraphQL bridge for NAS and server management.
+- [apprise-rmcp](https://github.com/dinglebear-ai/rapprise) - Apprise notification fan-out bridge for many delivery backends.
+- [gotify-rmcp](https://github.com/dinglebear-ai/rgotify) - Gotify push notification bridge for sends, messages, apps, and clients.
+- [yarr](https://github.com/dinglebear-ai/yarr) - Media-stack bridge for Sonarr, Radarr, Prowlarr, Plex, and related services.
+- [ytdl-rmcp](https://github.com/dinglebear-ai/rytdl) - Media download and metadata workflow server.
+- [synapse-rmcp](https://github.com/dinglebear-ai/synapse) - Local Synapse workflow server for scout and flux actions.
+- [cortex](https://github.com/dinglebear-ai/cortex) - Syslog and homelab log aggregation MCP server.
+- [axon](https://github.com/dinglebear-ai/axon) - RAG, crawl, scrape, extract, and semantic search project.
+- [labby](https://github.com/dinglebear-ai/labby) - Homelab control plane and MCP gateway project.
+- [lumen](https://github.com/dinglebear-ai/lumen) - Local semantic code search MCP server.
 
 ## Documentation
 

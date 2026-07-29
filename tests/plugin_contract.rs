@@ -22,7 +22,6 @@ fn plugin_manifests_exist_for_all_supported_hosts() {
         "plugins/rarcane/.codex-plugin/plugin.json",
         "plugins/rarcane/gemini-extension.json",
         "plugins/rarcane/.mcp.json",
-        "plugins/rarcane/hooks/hooks.json",
         "plugins/rarcane/skills/rarcane/SKILL.md",
     ] {
         assert!(std::path::Path::new(path).exists(), "{path} should exist");
@@ -100,15 +99,19 @@ fn plugin_manifests_share_identity_and_connection_settings() {
 }
 
 #[test]
-fn claude_hooks_call_binary_setup_plugin_hook_directly() {
-    let hooks = json("plugins/rarcane/hooks/hooks.json");
-    for hook_name in ["SessionStart", "ConfigChange"] {
-        let command = hooks["hooks"][hook_name][0]["hooks"][0]["command"]
-            .as_str()
-            .unwrap();
-        assert_eq!(
-            command,
-            "${CLAUDE_PLUGIN_ROOT}/bin/rarcane setup plugin-hook"
+fn plugin_ships_no_lifecycle_hooks() {
+    assert!(
+        !std::path::Path::new("plugins/rarcane/hooks").exists(),
+        "plugins/rarcane/hooks was retired; do not reintroduce plugin lifecycle hooks"
+    );
+
+    for path in [
+        "plugins/rarcane/.claude-plugin/plugin.json",
+        "plugins/rarcane/gemini-extension.json",
+    ] {
+        assert!(
+            json(path).get("hooks").is_none(),
+            "{path} must not declare a `hooks` key"
         );
     }
 }

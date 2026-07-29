@@ -82,7 +82,7 @@ just patterns-strict
 just patterns-json
 ```
 
-The checker enforces required files, modern Rust module layout (`no mod.rs`), thin MCP/CLI shims, MCP surface heuristics, action schema/help/test/CLI surface drift, plugin manifest version rules, binary-owned plugin hook constraints, auth/config basics, route presence, and tooling hooks. File reads and directory traversal fail closed.
+The checker enforces required files, modern Rust module layout (`no mod.rs`), thin MCP/CLI shims, MCP surface heuristics, action schema/help/test/CLI surface drift, plugin manifest version rules, the no-lifecycle-hooks rule, auth/config basics, route presence, and tooling hooks. File reads and directory traversal fail closed.
 
 File-size target overages are warnings until they exceed a hard limit, so existing borderline modules do not block unrelated work. Use `--strict` to fail on warnings for newly adapted servers or cleanup branches. Use `--json` for machine-readable output in dashboards or CI annotations.
 

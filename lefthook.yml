@@ -25,8 +25,8 @@
 #   - cargo audit     → network call; runs in CI
 #   - gitleaks        → heavy scan; runs in CI
 #   - cargo xtask patterns → full-repo contract scan; runs in CI and `just template-check`
-#   - `just test-marketplace-no-mcp` → builds and validates generated plugin trees;
-#                                      runs in CI and `just template-check`
+#   - `just validate-plugin` → validates the plugin manifest/skill tree; runs in CI
+#                              and `just template-check`
 #   - `just publish`       → release orchestration is intentionally manual; it runs the
 #                            full pre-release gate before dispatching release-please and must
 #                            never run automatically from a commit hook

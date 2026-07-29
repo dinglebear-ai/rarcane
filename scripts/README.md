@@ -8,7 +8,6 @@ Maintenance and automation scripts for the template. Shell scripts are written f
 |---|---|
 | `asciicheck.py` | Check/fix unexpected non-ASCII characters. |
 | `block-env-commits.sh` | Prevent `.env*` secrets from being committed. |
-| `build-no-mcp-marketplace.py` | Generate a gateway-managed marketplace plugin without MCP registration. |
 | `bump-version.sh` | Update version-bearing files from the `Cargo.toml` version. |
 | `check-blob-size.py` | Block unexpectedly large changed blobs. |
 | `check-coupled-files.sh` | Warn when files that normally change together drift. |
@@ -26,9 +25,7 @@ Maintenance and automation scripts for the template. Shell scripts are written f
 | `run-ascii-check.sh` | Collect tracked files and run `asciicheck.py`; pass `--fix` to rewrite in place. |
 | `sync-cargo.sh` | Sync `Cargo.lock` into plugin data directories. |
 | `test-mcp-auth.sh` | Smoke-test HTTP MCP bearer auth. |
-| `test-no-mcp-marketplace.sh` | Test no-MCP artifact validation, determinism, and overwrite safety. |
 | `test-template-features.sh` | Fast template invariant smoke tests. |
-| `validate-no-mcp-marketplace.sh` | Validate a generated gateway-managed marketplace plugin. |
 | `validate-plugin-layout.sh` | Validate Claude/Codex/Gemini plugin package layout. |
 
 `blob-size-allowlist.txt` is data for `check-blob-size.py`, not an executable script.
@@ -66,20 +63,6 @@ scripts/bump-version.sh major
 ```
 
 Updates `Cargo.toml`, `Cargo.lock`, and `server.json` when present. Plugin manifests intentionally remain versionless.
-
-### `build-no-mcp-marketplace.py`
-
-```bash
-python3 scripts/build-no-mcp-marketplace.py
-python3 scripts/build-no-mcp-marketplace.py --output /tmp/rarcane-no-mcp
-just marketplace-no-mcp
-```
-
-Copies the canonical `plugins/rarcane` tree into a generated artifact, removes
-`.mcp.json` and the legacy `mcp.json`, and strips Gemini's inline `mcpServers`
-block. The output retains manifests, settings, hooks, skills, and instruction
-symlinks. Generated directories carry a marker; the script refuses to replace
-an unmarked output directory.
 
 ### `check-blob-size.py`
 
@@ -265,17 +248,6 @@ scripts/test-mcp-auth.sh --check-x-api-key
 
 Checks that `/health` is public, `/mcp` rejects missing/bad bearer tokens with `401`, and `/mcp` accepts a valid bearer token. `x-api-key` is optional because the template auth layer uses bearer tokens.
 
-### `test-no-mcp-marketplace.sh`
-
-```bash
-bash scripts/test-no-mcp-marketplace.sh
-just test-marketplace-no-mcp
-```
-
-Builds the no-MCP marketplace artifact twice in temporary directories, validates
-both copies, compares them for deterministic output, verifies the source plugin
-is unchanged, and confirms the generator refuses to replace an unmarked directory.
-
 ### `test-template-features.sh`
 
 ```bash
@@ -285,17 +257,6 @@ just template-features
 
 Fast shell smoke tests for invariants that are awkward as Rust tests: `.env` blocking, agent docs symlinks, plugin layout, schema docs, and ASCII hygiene.
 
-### `validate-no-mcp-marketplace.sh`
-
-```bash
-bash scripts/validate-no-mcp-marketplace.sh
-bash scripts/validate-no-mcp-marketplace.sh /tmp/rarcane-no-mcp
-```
-
-Checks that a generated plugin has no standalone or inline MCP registration while
-retaining valid versionless manifests, settings and interface metadata, hooks,
-skills, and agent instruction symlinks.
-
 ### `validate-plugin-layout.sh`
 
 ```bash
@@ -304,7 +265,7 @@ PLUGIN_ROOT=plugins/rarcane scripts/validate-plugin-layout.sh
 just validate-plugin
 ```
 
-Validates Claude, Codex, and Gemini plugin manifests, shared MCP config, hook config, skills, sensitive fields, and the rule that plugin manifests do not contain `version`.
+Validates Claude, Codex, and Gemini plugin manifests, shared MCP config, skills, sensitive fields, the rule that plugin manifests do not contain `version`, and the rule that the plugin ships no lifecycle hooks.
 
 ---
 

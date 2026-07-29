@@ -721,9 +721,6 @@ plugins/
     .claude-plugin/
       plugin.json         ← plugin manifest + userConfig
     .mcp.json             ← MCP server connection (uses ${user_config.*})
-    hooks/
-      hooks.json          ← SessionStart + ConfigChange → plugin-setup.sh
-      plugin-setup.sh     ← thin adapter into `<binary> setup plugin-hook`
     skills/
       <service>/
         SKILL.md          ← three-tier skill (MCP → CLI → curl)
@@ -751,7 +748,6 @@ Adding an explicit version creates drift and requires manual bumping on every re
     "rarcane_api_key": { "type": "string", "title": "Arcane API key", "sensitive": true, "required": true }
   },
   "mcpServers": "./plugins/<service>/.mcp.json",
-  "hooks": "./plugins/<service>/hooks/hooks.json",
   "skills": "./plugins/<service>/skills"
 }
 ```
@@ -770,27 +766,23 @@ Adding an explicit version creates drift and requires manual bumping on every re
 }
 ```
 
-### hooks.json
+### No lifecycle hooks
 
-```json
-{
-  "hooks": {
-    "SessionStart": [{ "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/plugins/<service>/hooks/plugin-setup.sh", "timeout": 600 }] }],
-    "ConfigChange": [{ "matcher": "user_settings", "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/plugins/<service>/hooks/plugin-setup.sh", "timeout": 600 }] }]
-  }
-}
-```
+Plugins in this family ship **no** Claude Code lifecycle hooks: no `hooks/`
+directory, and no `hooks` key in any manifest. Session-start hooks made every
+Claude Code launch wait on service setup; setup is now operator-invoked instead.
 
-### plugin-setup.sh responsibilities
+### Binary setup responsibilities
+
+`<binary> setup plugin-hook` owns what the old hook wrapper used to do:
 
 1. Read `CLAUDE_PLUGIN_OPTION_*` env vars (set by plugin runtime from userConfig)
 2. Reject unsafe newline-bearing option values
 3. Export plugin options as runtime env vars
 4. Create the canonical appdata root with private permissions
-5. Ensure the binary is available on `PATH`
-6. Call `<binary> setup plugin-hook "$@"`
+5. Run `setup check`, optionally `setup repair`, and emit a structured JSON report
 
-The hook script must not own Docker/systemd orchestration, config file rewriting, smoke-test policy, or failure classification. Those behaviors live in the binary setup commands.
+Setup must not own Docker/systemd orchestration, config file rewriting, smoke-test policy, or failure classification beyond that report.
 
 ---
 
@@ -2310,18 +2302,17 @@ Every Rust server with a Claude plugin should expose:
 <binary> setup repair
 ```
 
-Use `setup plugin-hook` as the command in `plugin-setup.sh`. Keep `setup check` read-only and non-mutating. Keep `setup repair` idempotent and safe to rerun. `--no-repair` is the rollout/audit mode: it reports what would block startup without mutating appdata or restarting services.
+These are operator-invoked; no lifecycle hook calls them automatically. Keep `setup check` read-only and non-mutating. Keep `setup repair` idempotent and safe to rerun. `--no-repair` is the rollout/audit mode: it reports what would block startup without mutating appdata or restarting services.
 
-### Hook script responsibilities
+### Plugin-option mapping responsibilities
 
-`plugin-setup.sh` should only:
+`apply_plugin_options()` (`src/cli/setup.rs`, hoisted before `Config::load()`) should only:
 
 - reject unsafe newline-bearing plugin option values
 - map `CLAUDE_PLUGIN_OPTION_*` values to runtime env vars
 - create the canonical appdata root with private permissions
 - warn about stale legacy service managers if applicable
 - ensure the binary is available
-- call `<binary> setup plugin-hook`
 
 It should not own Docker/systemd orchestration, config file rewriting, smoke-test policy, or failure classification.
 
@@ -2501,16 +2492,14 @@ echo "  Run: rarcane doctor    # validate environment"
 echo "  Run: rarcane --version # verify install"
 ```
 
-### plugin-setup.sh binary symlinking
+### Plugin binary self-install
 
-The Claude Code plugin hook (`plugin-setup.sh`) symlinks the plugin-bundled binary into
-`~/.local/bin/` on every SessionStart so it stays current after plugin updates:
+There is no session-start hook to keep the binary current. `install_self()` in
+`src/cli/setup.rs` installs the plugin-bundled binary into `~/.local/bin/` when
+setup runs, so operators refresh it explicitly after a plugin update:
 
 ```bash
-link_binary() {
-    mkdir -p "${HOME}/.local/bin"
-    ln -sf "${CLAUDE_PLUGIN_ROOT}/bin/<service>" "${HOME}/.local/bin/<service>"
-}
+rarcane setup repair    # installs ${CLAUDE_PLUGIN_ROOT}/bin/<service> into ~/.local/bin
 ```
 
 ---

@@ -16,7 +16,6 @@
     }
   },
   "skills": "./skills",
-  "hooks": "./hooks/hooks.json",
   "settings": [
     {
       "name": "server_url",

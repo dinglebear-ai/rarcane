@@ -94,7 +94,7 @@ SERVERS = [
         "rarcane",
         ROOT,
         "rarcane",
-        # Hook calls the binary directly now (no plugin-setup.sh wrapper); the
+        # rarcane ships no lifecycle hooks and no shell wrapper; the
         # env-var mapping lives in apply_plugin_options() in src/cli/setup.rs.
         None,
         env=(

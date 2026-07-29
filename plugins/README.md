@@ -12,9 +12,6 @@ plugins/rarcane/
 │   ├── plugin.json       # Codex manifest
 │   └── README.md         # Codex manifest field reference
 ├── .mcp.json             # Shared MCP server connection config
-├── hooks/
-│   ├── hooks.json        # Lifecycle hook definitions
-│   └── plugin-setup.sh  # Deployment and validation script
 └── skills/
     ├── rarcane/
     │   └── SKILL.md      # Tool documentation for Claude and Codex
@@ -80,28 +77,23 @@ Shared MCP server connection config used by both plugins. Points both clients at
 
 ## Hooks
 
-### `hooks/hooks.json`
+The plugin ships **no** Claude Code lifecycle hooks. There is no `hooks/`
+directory, and no manifest declares a `hooks` key.
 
-Defines two lifecycle hooks:
+Setup is owned by the Rust binary and invoked on demand:
 
-| Hook | Trigger | Script |
-|---|---|---|
-| `SessionStart` | Every Claude Code session start | `hooks/plugin-setup.sh` |
-| `ConfigChange` | User updates plugin settings | `hooks/plugin-setup.sh` |
+| Command | Purpose |
+|---|---|
+| `rarcane setup check` | Audit plugin/runtime setup; read-only |
+| `rarcane setup repair` | Apply fixes; idempotent |
+| `rarcane setup plugin-hook --no-repair` | Contract audit for rollout tooling; no mutation |
 
-Timeout: 300 seconds.
-
-### `hooks/plugin-setup.sh`
-
-The lifecycle adapter. Runs on every session start and config change.
-
-- Reads `CLAUDE_PLUGIN_OPTION_*` env vars from plugin `userConfig`
-- Exports those values as the binary's runtime environment variables
-- Prepares the plugin appdata directory
-- Ensures `rarcane` is available on `PATH`
-- Calls `rarcane setup plugin-hook "$@"`
-
-Deployment policy, repair behavior, and failure classification live in the Rust binary, not in the hook script. The script is idempotent and intentionally does not manage Docker, systemd, config rewrites, port conflicts, or OAuth redirect construction itself.
+The binary reads `CLAUDE_PLUGIN_OPTION_*` env vars from plugin `userConfig`,
+exports them as its runtime environment variables, prepares the plugin appdata
+directory, and returns a structured JSON report. Deployment policy, repair
+behavior, and failure classification live in the binary — it does not manage
+Docker, systemd, config rewrites, port conflicts, or OAuth redirect
+construction.
 
 ---
 

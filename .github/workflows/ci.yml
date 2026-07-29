@@ -93,6 +93,11 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
+      # Fails when Cargo.toml, package.json, server.json and the plugin
+      # manifests disagree on the version. Previously reachable only by hand.
+      - name: Check version sync
+        run: bash scripts/check-version-sync.sh
+
       - name: Install taplo
         uses: taiki-e/install-action@07b4745e0c39a41822af610387492e3e53aa222b # v2.83.4
         with:
@@ -122,9 +127,6 @@ jobs:
 
       - name: Validate plugin layout
         run: bash scripts/validate-plugin-layout.sh
-
-      - name: Validate no-MCP marketplace artifact
-        run: bash scripts/test-no-mcp-marketplace.sh
 
       - name: Check schema docs
         run: python3 scripts/check-schema-docs.py --check

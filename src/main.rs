@@ -125,8 +125,8 @@ async fn serve_stdio_mcp() -> Result<()> {
 async fn run_cli() -> Result<()> {
     let parsed = cli::parse_args()?;
     // Translate CLAUDE_PLUGIN_OPTION_* into RARCANE_* env vars BEFORE Config::load()
-    // so the plugin hook can call the binary directly (no plugin-setup.sh wrapper).
-    // rarcane is template-style: setup_check validates the pre-loaded &Config.
+    // so `setup plugin-hook` sees plugin settings. rarcane is template-style:
+    // setup_check validates the pre-loaded &Config.
     if matches!(
         parsed,
         Some(cli::Command::Setup(cli::SetupCommand::PluginHook { .. }))

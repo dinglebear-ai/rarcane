@@ -8,13 +8,11 @@ Multi-platform plugin package for the Arcane MCP server. Contains manifests for 
 
 | File | Role |
 |---|---|
-| `.claude-plugin/plugin.json` | Claude Code manifest — identity, hooks, skills, monitors, `userConfig` |
+| `.claude-plugin/plugin.json` | Claude Code manifest — identity, skills, monitors, `userConfig` |
 | `.codex-plugin/plugin.json` | Codex manifest — same data + Codex UI fields (`interface`) |
 | `gemini-extension.json` | Gemini CLI manifest — uses `settings` array instead of `userConfig` |
 | `.mcp.json` | Shared MCP server connection config used by all three platforms |
 | `bin/rarcane` | Release binary used by the monitor — populate with `just install` |
-| `hooks/hooks.json` | Lifecycle hook definitions: `SessionStart`, `ConfigChange` |
-| `hooks/plugin-setup.sh` | Deployment and validation script (server mode or client mode) |
 | `monitors/monitors.json` | Background health monitor config (requires Claude Code v2.1.105+) |
 | `skills/rarcane/SKILL.md` | Three-tier tool documentation shared by Claude and Codex |
 
@@ -49,11 +47,36 @@ The three-tier structure must be preserved:
 - **Tier 2** (middle): full action reference with parameters and response shapes
 - **Tier 3** (bottom): workflows, HTTP fallback, error handling
 
-## Updating the setup script
+## Lifecycle hooks — retired
 
-`hooks/plugin-setup.sh` reads `CLAUDE_PLUGIN_OPTION_*` env vars that map to the `userConfig` fields in `plugin.json`. When you add or rename a `userConfig` field, update the env var block in the setup script to match.
+This plugin ships **no** Claude Code lifecycle hooks. There is no `hooks/`
+directory, and neither `.claude-plugin/plugin.json` nor `gemini-extension.json`
+declares a `hooks` key. `scripts/validate-plugin-layout.sh`,
+`cargo xtask patterns`, and `tests/plugin_contract.rs` all fail if hooks are
+reintroduced.
 
-Sensitive fields declared `"sensitive": true` in `plugin.json` are available as env vars in hooks but are **never** substituted into skill content.
+## Updating setup
+
+Config reaches the server through the `env` block in `.mcp.json`, which maps
+`userConfig` keys to `RARCANE_*` via `${user_config.*}`. That is the live path —
+no hook, no manual step.
+
+`apply_plugin_options()` in `src/cli/setup.rs` is a parallel
+`CLAUDE_PLUGIN_OPTION_*` → `RARCANE_*` map that only runs under a manual
+`rarcane setup plugin-hook`. **When you add or rename a `userConfig` field,
+update both the `.mcp.json` env block and that mapping** — updating only
+`setup.rs` leaves the value unreachable in a real plugin install.
+
+Setup is otherwise owned by the binary and invoked on demand (`rarcane setup
+check`, `rarcane setup repair`, `rarcane setup plugin-hook --no-repair`) for
+appdata and preflight.
+
+Caveat: only Claude Code and Codex read `.mcp.json`. Gemini declares its own
+HTTP `mcpServers` block inside `gemini-extension.json` and must be updated
+separately.
+
+Sensitive fields declared `"sensitive": true` in `plugin.json` are exposed as
+env vars to the binary but are **never** substituted into skill content.
 
 ## Template adaptation
 
@@ -61,5 +84,6 @@ When renaming `rarcane` → your service:
 
 1. Replace all `rarcane` / `Arcane` / `RARCANE_` identifiers in every file in this directory.
 2. Rename `skills/rarcane/` to `skills/<your-service>/`.
-3. Update `hooks/plugin-setup.sh` — the env var block near the top maps `CLAUDE_PLUGIN_OPTION_*` to your service's actual `RARCANE_*` vars.
+3. Update `apply_plugin_options()` in `src/cli/setup.rs` — it maps `CLAUDE_PLUGIN_OPTION_*` to your service's actual `RARCANE_*` vars.
 4. Keep the no-version rule: do not add `"version"` to any manifest.
+5. Keep the no-hooks rule: do not add a `hooks` key or a `hooks/` directory.

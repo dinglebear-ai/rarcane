@@ -114,7 +114,7 @@ Non-loopback HTTP deployments must use bearer auth or OAuth. The server refuses 
 }
 ```
 
-The binary must be in `$PATH`. The plugin's `plugin-setup.sh` symlinks it to `~/.local/bin/` on SessionStart.
+The binary must be in `$PATH`. Run `rarcane setup repair` to install the plugin-bundled binary into `~/.local/bin/`; the plugin ships no session-start hook to do this automatically.
 
 ## Public endpoints
 

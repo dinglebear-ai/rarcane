@@ -15,9 +15,6 @@ plugins/rarcane/
 ├── .mcp.json               # Shared MCP server connection config (all three platforms)
 ├── bin/
 │   └── rarcane             # Release binary (populate with: just install)
-├── hooks/
-│   ├── hooks.json          # SessionStart + ConfigChange hook definitions
-│   └── plugin-setup.sh     # Deployment and validation script
 ├── monitors/
 │   └── monitors.json       # Background health monitor (requires Claude Code v2.1.105+)
 └── skills/
@@ -57,9 +54,19 @@ The `${user_config.*}` / `${settings.*}` variables are populated from each platf
 
 ## Hooks
 
-`hooks/hooks.json` fires `plugin-setup.sh` on `SessionStart` and `ConfigChange`.
+This plugin ships **no** Claude Code lifecycle hooks — no `hooks/` directory and
+no `hooks` key in any manifest.
 
-The setup script is a thin adapter. It maps plugin settings to environment variables, prepares appdata, ensures the bundled binary is available on `PATH`, and delegates setup checks or repair to `rarcane setup plugin-hook "$@"`.
+Setup is owned by the binary and run on demand instead of at session start:
+
+```bash
+rarcane setup check                     # audit plugin/runtime setup
+rarcane setup repair                    # apply fixes
+rarcane setup plugin-hook --no-repair   # contract audit, no mutation
+```
+
+The binary maps `CLAUDE_PLUGIN_OPTION_*` settings to environment variables,
+prepares appdata, and returns a structured JSON report.
 
 ## Monitors
 

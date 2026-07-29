@@ -33,7 +33,7 @@ pub enum SetupCommand {
 /// `RARCANE_*` process env vars the binary reads, before `Config::load()` runs.
 ///
 /// This replaces the former `plugin-setup.sh` wrapper: the binary now owns the
-/// env-var mapping itself, so the plugin hook calls the binary directly. rarcane
+/// env-var mapping itself, and the plugin ships no lifecycle hooks. rarcane
 /// is template-style — `Config::load()` runs before the setup command dispatches
 /// and `setup_check()` validates the pre-loaded `&Config` — so this MUST be
 /// called before `Config::load()` (hoisted in `run_cli`, gated to the plugin-hook

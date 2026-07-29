@@ -118,13 +118,13 @@ Actions that require confirmation: any `delete_*`, `remove_*`, `destroy_*`, `wip
 
 ## Binary owns its setup
 
-Plugin hooks must be thin adapters. The durable setup behavior belongs in the service binary so hooks, manual repair, tests, and docs all exercise the same code path:
+Setup behavior belongs in the service binary — never in manifest-specific shell adapters — so operators, tests, and docs all exercise the same code path:
 
 ```
-plugin-setup.sh  →  <binary> setup plugin-hook
+<binary> setup plugin-hook  →  setup check [→ setup repair]  →  structured JSON report
 ```
 
-The hook script maps env vars and calls the binary. The binary runs `setup check`, optionally `setup repair`, and returns a structured JSON report. Advisory failures exit 0 and don't block Claude Code SessionStart. Blocking failures exit nonzero.
+The binary maps `CLAUDE_PLUGIN_OPTION_*` env vars, runs `setup check`, optionally `setup repair`, and returns a structured JSON report. Advisory failures exit 0; blocking failures exit nonzero. rarcane ships no Claude Code lifecycle hooks — setup is operator-invoked, not session-triggered.
 
 ## Three-tier skill fallback
 

@@ -19,8 +19,6 @@ plugins/rarcane/
     README.md            # Codex manifest field reference
   .mcp.json              # Shared Claude/Codex MCP connection config
   gemini-extension.json  # Gemini CLI extension manifest
-  hooks/
-    hooks.json           # Claude lifecycle hook declarations
   bin/
     rarcane              # Plugin binary; owns setup and repair behavior
   skills/
@@ -31,27 +29,6 @@ plugins/rarcane/
 ```
 
 When adapting the template, rename `rarcane`, `Arcane`, and `EXAMPLE` consistently across the package, then update host-specific display text and credentials.
-
-## Gateway-managed marketplace artifact
-
-Some marketplaces need the plugin, skills, hooks, and settings without registering
-another MCP server because the server is already connected through a shared gateway.
-Generate that variant from the canonical plugin tree instead of maintaining a copied
-tree:
-
-```bash
-just marketplace-no-mcp
-```
-
-The generated directory is `dist/marketplace-no-mcp/rarcane`. It omits both the
-current `.mcp.json` registration and the legacy `mcp.json` path, and removes the
-inline `mcpServers` object from the Gemini manifest. The generator preserves the
-remaining manifests, settings, hooks, skills, and instruction symlinks.
-
-Run `just test-marketplace-no-mcp` to validate the normal plugin, build the variant
-twice, verify identical output, and confirm the source plugin is unchanged. Generated
-directories contain a marker file and may be replaced by later runs; the generator
-refuses to replace an unmarked directory.
 
 ## Shared Contract
 
@@ -74,19 +51,19 @@ Claude Code uses `plugins/rarcane/.claude-plugin/plugin.json`.
 Responsibilities:
 
 - identifies the plugin and repository
-- declares `mcpServers`, `hooks`, and `skills` paths
+- points at the shared `.mcp.json` and `skills` paths
 - defines `userConfig` settings exposed in Claude Code
 - marks sensitive values with `sensitive: true`
 
-Claude-specific lifecycle hooks live in `plugins/rarcane/hooks/hooks.json`. The default hooks are:
+### No lifecycle hooks
 
-| Hook | Trigger | Command |
-| --- | --- | --- |
-| `SessionStart` | every Claude Code session start | `${CLAUDE_PLUGIN_ROOT}/bin/rarcane setup plugin-hook` |
-| `ConfigChange` | plugin user settings change | `${CLAUDE_PLUGIN_ROOT}/bin/rarcane setup plugin-hook` |
+This plugin ships **no** Claude Code lifecycle hooks. `plugins/rarcane/hooks/`
+was retired; neither the Claude manifest nor the Gemini manifest declares a
+`hooks` key, and `scripts/validate-plugin-layout.sh` plus `cargo xtask patterns`
+both fail if hooks are reintroduced.
 
-The hook invokes the binary directly; there is no shell adapter. The standard
-command is:
+Setup still lives in the binary and is run on demand rather than on session
+start. The family-standard command remains:
 
 ```bash
 <binary> setup plugin-hook
@@ -98,9 +75,18 @@ For rollout audits, the binary must also support:
 <binary> setup plugin-hook --no-repair
 ```
 
-The binary maps `CLAUDE_PLUGIN_OPTION_*` values into runtime env vars, creates
-or audits the appdata setup, and emits the hook result. The hook path must not
-own Docker/systemd orchestration or service bootstrap behavior.
+Concretely, for this server:
+
+```bash
+rarcane setup check     # audit current plugin/runtime setup
+rarcane setup repair    # apply fixes
+rarcane setup plugin-hook --no-repair   # contract audit for rollout tooling
+```
+
+The binary maps `CLAUDE_PLUGIN_OPTION_*` values into runtime env vars, audits
+the appdata setup, and emits a JSON report carrying `exit_policy`,
+`blocking_failures`, `advisory_failures`, and `ran_repair`. Setup must not own
+Docker/systemd orchestration or service bootstrap behavior.
 
 ## Codex
 
@@ -158,7 +144,7 @@ Keep Gemini setting names aligned with Claude/Codex where possible. For rarcane,
 
 ## Plugin Validation
 
-Run the plugin layout validator after changing manifests, MCP config, hooks, or
+Run the plugin layout validator after changing manifests, MCP config, or
 skills:
 
 ```bash
@@ -171,10 +157,10 @@ The validator checks:
 
 - Claude, Codex, and Gemini manifests are valid JSON
 - plugin manifests do not contain a `version` field
-- manifests point to the shared `.mcp.json`, hooks, and skills paths
+- manifests point to the shared `.mcp.json` and skills paths
 - shared MCP config exposes the `rarcane` HTTP server at `${user_config.server_url}/mcp`
 - Gemini config exposes the same `rarcane` HTTP server at `${settings.server_url}/mcp`
-- hook config runs `${CLAUDE_PLUGIN_ROOT}/bin/rarcane setup plugin-hook` directly
+- no manifest declares a `hooks` key and no `hooks/` directory is shipped
 - every skill has `name:` and `description:` frontmatter
 
 Use `PLUGIN_ROOT=plugins/<service>` when validating an adapted service package.
@@ -314,7 +300,7 @@ When creating a real server from the template:
 2. Update all three manifests with the real repository, description, author, keywords, and capability claims.
 3. Keep credential names aligned across Claude `userConfig`, Codex shared `.mcp.json`, and Gemini `settings`.
 4. Replace upstream credential fields such as `rarcane_api_url` and `rarcane_api_key`.
-5. Update `plugins/rarcane/hooks/plugin-setup.sh` to map service-specific plugin options into env vars.
+5. Update `apply_plugin_options()` in `src/cli/setup.rs` to map service-specific plugin options into env vars.
 6. Implement `<binary> setup plugin-hook`, `--no-repair`, `check`, and `repair`.
 7. Update shared skill docs for the actual action surface.
 8. Replace Codex `defaultPrompt` entries with realistic prompts.
@@ -325,8 +311,7 @@ When creating a real server from the template:
 
 Each server should include tests that prove:
 
-- Claude hook config points to `hooks/plugin-setup.sh`
-- hook script delegates to `<binary> setup plugin-hook`
+- no plugin manifest declares a `hooks` key and no `hooks/` directory exists
 - `setup plugin-hook --no-repair` parses and does not mutate appdata
 - JSON plugin-hook output contains `exit_policy`, `blocking_failures`, `advisory_failures`, `ran_repair`, and `no_repair`
 - advisory failures exit `0`

@@ -253,26 +253,14 @@ pub(super) fn plugins(reporter: &mut PatternReporter) -> Result<()> {
         reporter.fail("plugins", failures.join("; "));
     }
 
-    let hook_path = Path::new("plugins/rarcane/hooks/hooks.json");
-    if hook_path.exists() {
-        let hook = read_file("plugins/rarcane/hooks/hooks.json")?;
-        // The hook must call the binary directly (no plugin-setup.sh wrapper).
-        if hook.contains("plugin-setup.sh") {
-            reporter.fail(
-                "plugins",
-                "hooks.json must not reference the removed plugin-setup.sh wrapper",
-            );
-        } else if !hook.contains("/bin/rarcane setup plugin-hook") {
-            reporter.fail(
-                "plugins",
-                "hooks.json must call `${CLAUDE_PLUGIN_ROOT}/bin/rarcane setup plugin-hook` directly",
-            );
-        } else {
-            reporter.ok(
-                "plugins",
-                "plugin hooks call the binary's setup plugin-hook directly",
-            );
-        }
+    // Claude Code lifecycle hooks were retired; the plugin must not reintroduce them.
+    if Path::new("plugins/rarcane/hooks").exists() {
+        reporter.fail(
+            "plugins",
+            "plugins/rarcane/hooks was retired; do not reintroduce plugin lifecycle hooks",
+        );
+    } else {
+        reporter.ok("plugins", "plugin ships no lifecycle hooks");
     }
     Ok(())
 }
