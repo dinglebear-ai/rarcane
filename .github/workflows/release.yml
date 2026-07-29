@@ -32,10 +32,9 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  # REQUIRED under a compile wrapper (soldr/zccache).
+  # REQUIRED under a compile wrapper (kache).
   CARGO_INCREMENTAL: "0"
   # Persistent per-runner zccache compile store (replaces the old sccache dir).
-  SOLDR_CACHE_DIR: ${{ github.workspace }}/../.soldr-cache
 
 jobs:
   release-meta:
@@ -90,8 +89,8 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v6.0.0
         with:
           ref: ${{ needs.release-meta.outputs.source_ref }}
-      - name: Install pinned Rust toolchain + soldr
-        uses: ./.github/actions/setup-rust-soldr
+      - name: Install pinned Rust toolchain + kache
+        uses: ./.github/actions/setup-rust-kache
         with:
           toolchain: 1.96.0
           targets: ${{ matrix.target }}

@@ -10,10 +10,9 @@ permissions:
   contents: read
 
 env:
-  # REQUIRED under a compile wrapper (soldr/zccache).
+  # REQUIRED under a compile wrapper (kache).
   CARGO_INCREMENTAL: "0"
   # Persistent per-runner zccache compile store.
-  SOLDR_CACHE_DIR: ${{ github.workspace }}/../.soldr-cache
 
 jobs:
   msrv:
@@ -23,8 +22,8 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
-      - name: Install Rust 1.92 + soldr
-        uses: ./.github/actions/setup-rust-soldr
+      - name: Install Rust 1.92 and kache
+        uses: ./.github/actions/setup-rust-kache
         with:
           toolchain: "1.92.0"
 
