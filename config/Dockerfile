@@ -20,9 +20,9 @@
 
 # ── Stage 1: Builder ──────────────────────────────────────────────────────────
 # TEMPLATE: Pin to a digest for reproducible builds:
-#   docker pull rust:1.90-slim-bookworm
-#   docker inspect --format '{{index .RepoDigests 0}}' rust:1.90-slim-bookworm
-FROM rust:1.97-slim-bookworm@sha256:99e09cb2284e2ddbb73a995deee3e91783fd04d177602ccf6eab326d778ee777 AS builder
+#   docker pull rust:1.97.1-slim-bookworm
+#   docker inspect --format '{{index .RepoDigests 0}}' rust:1.97.1-slim-bookworm
+FROM rust:1.97.1-slim-bookworm@sha256:99e09cb2284e2ddbb73a995deee3e91783fd04d177602ccf6eab326d778ee777 AS builder
 
 WORKDIR /app
 
