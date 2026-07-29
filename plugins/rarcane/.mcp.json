@@ -6,7 +6,6 @@
       "env": {
         "RARCANE_API_URL": "${user_config.rarcane_api_url}",
         "RARCANE_API_KEY": "${user_config.rarcane_api_key}",
-        "RARCANE_SERVER_URL": "${user_config.server_url}",
         "RARCANE_MCP_TOKEN": "${user_config.api_token}",
         "RARCANE_MCP_NO_AUTH": "${user_config.no_auth}",
         "RARCANE_MCP_AUTH_MODE": "${user_config.auth_mode}",

@@ -273,8 +273,10 @@ a `userConfig` key means updating both maps.** Setup subcommands (`check`,
 `repair`, `plugin-hook --no-repair`) remain useful for appdata and preflight,
 not for configuring the server.
 
-Note `RARCANE_SERVER_URL` is mapped by both but read by nothing — `server_url`
-is consumed only by `monitors/monitors.json` and Gemini's HTTP URL.
+`server_url` is deliberately **not** in the `.mcp.json` env block: nothing in
+`src/` ever read `RARCANE_SERVER_URL`, and the monitor no longer passes a URL
+either. It remains a `userConfig` field because Gemini's HTTP `mcpServers` block
+consumes it.
 
 ## Common gotchas
 
