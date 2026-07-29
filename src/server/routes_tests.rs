@@ -1,12 +1,12 @@
 use axum::{
     body::Body,
-    http::{header, Request, StatusCode},
+    http::{Request, StatusCode, header},
 };
 use tower::ServiceExt;
 
 use super::{
-    router, static_token_for_auth, with_mcp_concurrency_limit, MAX_CONCURRENT_HTTP_REQUESTS,
-    MCP_BODY_LIMIT_BYTES,
+    MAX_CONCURRENT_HTTP_REQUESTS, MCP_BODY_LIMIT_BYTES, router, static_token_for_auth,
+    with_mcp_concurrency_limit,
 };
 
 #[tokio::test]

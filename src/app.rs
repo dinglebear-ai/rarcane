@@ -8,14 +8,14 @@
 
 use anyhow::Result;
 use reqwest::Method;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 use crate::{
     actions::{
-        rest_help, spec_for, validate_relative_path, ActionSpec, ActionTransport, ArcaneAction,
-        BodyMode, ValidationError,
+        ActionSpec, ActionTransport, ArcaneAction, BodyMode, ValidationError, rest_help, spec_for,
+        validate_relative_path,
     },
-    arcane::{encode_path_segment, ArcaneClient},
+    arcane::{ArcaneClient, encode_path_segment},
 };
 
 // Unit tests live in a sidecar file — see src/app_tests.rs for the pattern.
@@ -227,22 +227,22 @@ fn validate_request(spec: &crate::actions::ActionSpec, action: &ArcaneAction) ->
         }
         .into());
     }
-    if let Some(label) = spec.id_label {
-        if action.id.as_deref().unwrap_or_default().is_empty() {
-            if spec.action == "environment" {
-                // Preserve TypeScript prior art: environment single-resource ops accept envId fallback.
-                if action.env_id.as_deref().unwrap_or_default().is_empty() {
-                    return Err(ValidationError::MissingId {
-                        label: label.into(),
-                    }
-                    .into());
-                }
-            } else {
+    if let Some(label) = spec.id_label
+        && action.id.as_deref().unwrap_or_default().is_empty()
+    {
+        if spec.action == "environment" {
+            // Preserve TypeScript prior art: environment single-resource ops accept envId fallback.
+            if action.env_id.as_deref().unwrap_or_default().is_empty() {
                 return Err(ValidationError::MissingId {
                     label: label.into(),
                 }
                 .into());
             }
+        } else {
+            return Err(ValidationError::MissingId {
+                label: label.into(),
+            }
+            .into());
         }
     }
     for field in spec.required_params {

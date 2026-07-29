@@ -12,19 +12,20 @@ use std::{borrow::Cow, sync::Arc, time::Instant};
 
 use lab_auth::AuthContext;
 use rmcp::{
+    ErrorData, RoleServer, ServerHandler,
     model::{
-        CallToolRequestParams, CallToolResult, ContentBlock, GetPromptRequestParams,
-        GetPromptResult, Implementation, ListPromptsResult, ListResourcesResult, ListToolsResult,
-        PaginatedRequestParams, ReadResourceRequestParams, ReadResourceResult, Resource,
-        ResourceContents, ServerCapabilities, ServerInfo, Tool,
+        CallToolRequestParams, CallToolResponse, CallToolResult, ContentBlock,
+        GetPromptRequestParams, GetPromptResponse, Implementation, ListPromptsResult,
+        ListResourcesResult, ListToolsResult, PaginatedRequestParams, ReadResourceRequestParams,
+        ReadResourceResponse, ReadResourceResult, Resource, ResourceContents, ServerCapabilities,
+        ServerInfo, Tool,
     },
     service::{Peer, RequestContext},
-    ErrorData, RoleServer, ServerHandler,
 };
 use serde_json::{Map, Value};
 
 use crate::{
-    actions::{is_known_action, spec_for, ValidationError},
+    actions::{ValidationError, is_known_action, spec_for},
     token_limit,
 };
 
@@ -64,7 +65,7 @@ impl ServerHandler for ArcaneRmcpServer {
         &self,
         request: CallToolRequestParams,
         context: RequestContext<RoleServer>,
-    ) -> Result<CallToolResult, ErrorData> {
+    ) -> Result<CallToolResponse, ErrorData> {
         let tool_name = request.name.to_string();
 
         // Extract action before scope check so a missing action returns the
@@ -90,13 +91,12 @@ impl ServerHandler for ArcaneRmcpServer {
         }
         // Only scope-check when a known action is present; dispatch_example will
         // return the validation error for a missing action below.
-        if let (Some(auth), Some(action_str)) = (auth, action_opt.as_deref()) {
-            if let Some(required_scope) = spec_for(action_str, subaction_opt.as_deref())
+        if let (Some(auth), Some(action_str)) = (auth, action_opt.as_deref())
+            && let Some(required_scope) = spec_for(action_str, subaction_opt.as_deref())
                 .expect("validated action spec")
                 .required_scope
-            {
-                check_scope(auth, required_scope, action_str)?;
-            }
+        {
+            check_scope(auth, required_scope, action_str)?;
         }
 
         let action: String = action_opt.unwrap_or_default();
@@ -120,7 +120,7 @@ impl ServerHandler for ArcaneRmcpServer {
                     elapsed_ms = started.elapsed().as_millis(),
                     "MCP tool execution completed"
                 );
-                tool_result_from_json(result)
+                tool_result_from_json(result).map(Into::into)
             }
             Err(error) if crate::actions::is_validation_error(&error) => {
                 tracing::warn!(
@@ -163,7 +163,7 @@ impl ServerHandler for ArcaneRmcpServer {
         &self,
         request: ReadResourceRequestParams,
         context: RequestContext<RoleServer>,
-    ) -> Result<ReadResourceResult, ErrorData> {
+    ) -> Result<ReadResourceResponse, ErrorData> {
         require_auth_context(&self.state, &context)?;
         if request.uri != SCHEMA_RESOURCE_URI {
             return Err(ErrorData::invalid_params(
@@ -174,11 +174,10 @@ impl ServerHandler for ArcaneRmcpServer {
         let schema = tool_definitions();
         let text = serde_json::to_string_pretty(&schema)
             .map_err(|e| ErrorData::internal_error(format!("serialization error: {e}"), None))?;
-        Ok(ReadResourceResult::new(vec![ResourceContents::text(
-            text,
-            SCHEMA_RESOURCE_URI,
-        )
-        .with_mime_type("application/json")]))
+        Ok(ReadResourceResult::new(vec![
+            ResourceContents::text(text, SCHEMA_RESOURCE_URI).with_mime_type("application/json"),
+        ])
+        .into())
     }
 
     // ── prompts ───────────────────────────────────────────────────────────────
@@ -196,9 +195,11 @@ impl ServerHandler for ArcaneRmcpServer {
         &self,
         request: GetPromptRequestParams,
         context: RequestContext<RoleServer>,
-    ) -> Result<GetPromptResult, ErrorData> {
+    ) -> Result<GetPromptResponse, ErrorData> {
         require_auth_context(&self.state, &context)?;
-        prompts::get_prompt(request).map_err(|e| ErrorData::invalid_params(e.to_string(), None))
+        prompts::get_prompt(request)
+            .map(Into::into)
+            .map_err(|e| ErrorData::invalid_params(e.to_string(), None))
     }
 
     // ── server info ───────────────────────────────────────────────────────────

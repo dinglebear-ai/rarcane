@@ -10,10 +10,10 @@ use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use crate::{
-    config::{default_data_dir, AuthMode, Config},
+    config::{AuthMode, Config, default_data_dir},
     server::resolve_auth_policy_kind,
 };
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 
 // ── public surface ────────────────────────────────────────────────────────────
 
@@ -71,8 +71,12 @@ pub fn apply_plugin_options() {
             if s.is_empty() || s.contains('\n') || s.contains('\r') {
                 continue;
             }
-            // edition 2021: set_var is safe (no unsafe block required).
-            std::env::set_var(dest, v);
+            // SAFETY: edition 2024 marks `set_var` unsafe because concurrent
+            // reads of the environment are UB. This runs once during CLI
+            // startup, before `Config::load()` and before any task or thread
+            // that reads the environment is spawned, so no concurrent access
+            // is possible.
+            unsafe { std::env::set_var(dest, v) };
         }
     }
 }

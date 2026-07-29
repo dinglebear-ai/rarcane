@@ -1,4 +1,4 @@
-use rarcane::cli::{parse_args_from, Command, SetupCommand};
+use rarcane::cli::{Command, SetupCommand, parse_args_from};
 use serde_json::json;
 
 #[test]

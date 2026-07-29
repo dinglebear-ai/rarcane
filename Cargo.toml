@@ -17,8 +17,8 @@ resolver = "2"
 [package]
 name = "rarcane"
 version = "0.4.4"
-edition = "2021"
-rust-version = "1.90"
+edition = "2024"
+rust-version = "1.92"
 categories = ["command-line-utilities", "development-tools"]
 keywords = ["mcp", "arcane", "docker", "containers", "rmcp"]
 repository = "https://github.com/jmagar/rarcane"
@@ -36,7 +36,7 @@ tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal
 
 # HTTP / MCP transport
 axum = "0.8"
-rmcp = { version = "2.2.0", default-features = false, features = [
+rmcp = { version = "=3.0.0-beta.2", default-features = false, features = [
   "server",
   "macros",
   "transport-streamable-http-server",
@@ -86,7 +86,10 @@ test-support = []
 rarcane = { path = ".", features = ["test-support"] }
 tempfile = "3"
 tower = { version = "0.5", features = ["util"] }
-rmcp = { version = "2.2.0", default-features = false, features = [
+rmcp = { version = "=3.0.0-beta.2", default-features = false, features = [
   "client",
   "transport-child-process",
 ] }
+
+[lints.clippy]
+mod_module_files = "deny"

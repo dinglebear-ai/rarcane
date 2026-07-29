@@ -14,11 +14,11 @@
 
 use crate::{
     actions::ArcaneAction,
-    app::{local_help, local_status, validate_service_action, ArcaneService},
+    app::{ArcaneService, local_help, local_status, validate_service_action},
     arcane::ArcaneClient,
     config::ArcaneConfig,
 };
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 
 // TEMPLATE: The doctor module is the §48 reference implementation.
 //           Import it from here and wire into run() below.
@@ -26,7 +26,7 @@ pub mod doctor;
 pub mod setup;
 pub mod watch;
 
-pub use setup::{apply_plugin_options, run_setup, SetupCommand};
+pub use setup::{SetupCommand, apply_plugin_options, run_setup};
 
 pub const USAGE: &str = "Usage:
   rarcane [serve]          Start MCP HTTP server (default)

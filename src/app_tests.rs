@@ -1,6 +1,6 @@
 use super::*;
 use crate::{
-    actions::{ArcaneAction, ACTION_SPECS},
+    actions::{ACTION_SPECS, ArcaneAction},
     arcane::ArcaneClient,
     config::ArcaneConfig,
 };
@@ -60,7 +60,10 @@ async fn generic_service_dispatch_rejects_mcp_only_actions() {
 async fn destructive_actions_require_boolean_confirm() {
     let _guard = DESTRUCTIVE_ENV_LOCK.lock().await;
     let previous = std::env::var_os("RARCANE_MCP_ALLOW_DESTRUCTIVE");
-    std::env::remove_var("RARCANE_MCP_ALLOW_DESTRUCTIVE");
+    // SAFETY: edition 2024 marks set_var/remove_var unsafe because they race
+    // with concurrent environment reads. DESTRUCTIVE_ENV_LOCK (held above)
+    // serialises every test that touches this variable.
+    unsafe { std::env::remove_var("RARCANE_MCP_ALLOW_DESTRUCTIVE") };
     let error = stub_service()
         .dispatch(&ArcaneAction {
             action: "project".into(),
@@ -72,9 +75,12 @@ async fn destructive_actions_require_boolean_confirm() {
         .await
         .expect_err("destructive action should be blocked before network");
     assert!(error.to_string().contains("confirmation required"));
-    match previous {
-        Some(value) => std::env::set_var("RARCANE_MCP_ALLOW_DESTRUCTIVE", value),
-        None => std::env::remove_var("RARCANE_MCP_ALLOW_DESTRUCTIVE"),
+    // SAFETY: still holding DESTRUCTIVE_ENV_LOCK; see above.
+    unsafe {
+        match previous {
+            Some(value) => std::env::set_var("RARCANE_MCP_ALLOW_DESTRUCTIVE", value),
+            None => std::env::remove_var("RARCANE_MCP_ALLOW_DESTRUCTIVE"),
+        }
     }
 }
 

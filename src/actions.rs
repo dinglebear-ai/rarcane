@@ -1,5 +1,5 @@
 use anyhow::Result;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::time::Duration;
 
 use crate::app::ArcaneService;
@@ -48,10 +48,9 @@ impl std::fmt::Display for ValidationError {
                 f,
                 "unknown subaction `{subaction}` for action `{action}`; use action=help subaction={action}"
             ),
-            Self::McpOnlyAction { action } => write!(
-                f,
-                "action `{action}` is MCP-only and requires an MCP peer"
-            ),
+            Self::McpOnlyAction { action } => {
+                write!(f, "action `{action}` is MCP-only and requires an MCP peer")
+            }
             Self::WrongType { field } => write!(f, "`{field}` has the wrong type"),
             Self::InvalidPath { field } => {
                 write!(f, "`{field}` must be a relative path without `..` segments")

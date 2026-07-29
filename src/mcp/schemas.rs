@@ -8,9 +8,9 @@
 
 use std::sync::OnceLock;
 
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
-use crate::actions::{action_names, ACTION_SPECS};
+use crate::actions::{ACTION_SPECS, action_names};
 
 /// Cached JSON schema definitions (static data, built once at first call).
 static TOOL_DEFINITIONS: OnceLock<Vec<Value>> = OnceLock::new();

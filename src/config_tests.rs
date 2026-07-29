@@ -69,10 +69,13 @@ fn is_loopback_subdomain_is_false() {
 // Each test uses a distinct key to avoid collisions with parallel test threads.
 
 fn call_env_bool(key: &str, raw: &str) -> anyhow::Result<bool> {
-    std::env::set_var(key, raw);
+    // SAFETY: edition 2024 marks set_var/remove_var unsafe because they race
+    // with concurrent environment reads. Each caller passes a uniquely-named
+    // key (see the module comment above), so no other test thread observes it.
+    unsafe { std::env::set_var(key, raw) };
     let mut target = false;
     let result = env_bool(key, &mut target);
-    std::env::remove_var(key);
+    unsafe { std::env::remove_var(key) };
     result.map(|_| target)
 }
 
@@ -115,10 +118,11 @@ fn env_bool_rejects_invalid() {
 // ── env_list helper ───────────────────────────────────────────────────────────
 
 fn call_env_list(key: &str, raw: &str) -> Vec<String> {
-    std::env::set_var(key, raw);
+    // SAFETY: see `call_env_bool` — the key is unique per test.
+    unsafe { std::env::set_var(key, raw) };
     let mut target: Vec<String> = Vec::new();
     env_list(key, &mut target);
-    std::env::remove_var(key);
+    unsafe { std::env::remove_var(key) };
     target
 }
 
@@ -137,10 +141,11 @@ fn env_list_trims_spaces_around_commas() {
 #[test]
 fn env_list_empty_string_leaves_target_unchanged() {
     // An empty env var should not overwrite an existing target
-    std::env::set_var("TEST_ENV_LIST_EMPTY", "");
+    // SAFETY: see `call_env_bool` — this key is unique to this test.
+    unsafe { std::env::set_var("TEST_ENV_LIST_EMPTY", "") };
     let mut target = vec!["existing".to_string()];
     env_list("TEST_ENV_LIST_EMPTY", &mut target);
-    std::env::remove_var("TEST_ENV_LIST_EMPTY");
+    unsafe { std::env::remove_var("TEST_ENV_LIST_EMPTY") };
     assert_eq!(
         target,
         vec!["existing"],

@@ -21,11 +21,11 @@ use rarcane::{
     cli,
     config::Config,
     mcp,
-    server::{self, resolve_auth_policy_kind, AppState, AuthPolicy, AuthPolicyKind},
+    server::{self, AppState, AuthPolicy, AuthPolicyKind, resolve_auth_policy_kind},
 };
-use rmcp::{transport::stdio, ServiceExt};
+use rmcp::{ServiceExt, transport::stdio};
 use tracing::info;
-use tracing_subscriber::{fmt, EnvFilter};
+use tracing_subscriber::{EnvFilter, fmt};
 
 #[tokio::main]
 async fn main() -> Result<()> {

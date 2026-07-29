@@ -82,9 +82,11 @@ fn invalid_public_url_is_rejected() {
     let mut config = config("0.0.0.0");
     config.mcp.auth.public_url = Some("not a url".into());
     let error = resolve_auth_policy_kind(&config, true).unwrap_err();
-    assert!(error
-        .to_string()
-        .contains("RARCANE_MCP_PUBLIC_URL is invalid"));
+    assert!(
+        error
+            .to_string()
+            .contains("RARCANE_MCP_PUBLIC_URL is invalid")
+    );
 }
 
 #[test]
@@ -92,7 +94,9 @@ fn wildcard_public_url_is_rejected() {
     let mut config = config("0.0.0.0");
     config.mcp.auth.public_url = Some("https://*.rarcane.com".into());
     let error = resolve_auth_policy_kind(&config, true).unwrap_err();
-    assert!(error
-        .to_string()
-        .contains("RARCANE_MCP_PUBLIC_URL must not contain wildcard hosts"));
+    assert!(
+        error
+            .to_string()
+            .contains("RARCANE_MCP_PUBLIC_URL must not contain wildcard hosts")
+    );
 }

@@ -40,16 +40,20 @@ fn schema_exposes_action_specific_subactions_and_requirements() {
         .iter()
         .find(|rule| rule["if"]["properties"]["action"]["const"] == "container")
         .expect("container rule");
-    assert!(container["then"]["properties"]["subaction"]["enum"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .any(|value| value == "list"));
-    assert!(container["then"]["required"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .any(|value| value == "subaction"));
+    assert!(
+        container["then"]["properties"]["subaction"]["enum"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|value| value == "list")
+    );
+    assert!(
+        container["then"]["required"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|value| value == "subaction")
+    );
 
     let get = rules
         .iter()
@@ -69,16 +73,20 @@ fn schema_exposes_action_specific_subactions_and_requirements() {
                 && rule["if"]["properties"]["subaction"]["const"] == "restore"
         })
         .expect("volume:restore rule");
-    assert!(restore["then"]["required"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .any(|value| value == "params"));
-    assert!(restore["then"]["properties"]["params"]["required"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .any(|value| value == "backupId"));
+    assert!(
+        restore["then"]["required"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|value| value == "params")
+    );
+    assert!(
+        restore["then"]["properties"]["params"]["required"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|value| value == "backupId")
+    );
 }
 
 #[test]
@@ -97,15 +105,21 @@ fn environment_single_resource_schema_accepts_id_or_env_id() {
     let alternatives = get["then"]["anyOf"]
         .as_array()
         .expect("environment:get should accept either identifier field");
-    assert!(alternatives
-        .iter()
-        .any(|alternative| alternative["required"] == serde_json::json!(["id"])));
-    assert!(alternatives
-        .iter()
-        .any(|alternative| alternative["required"] == serde_json::json!(["envId"])));
-    assert!(!get["then"]["required"]
-        .as_array()
-        .expect("required fields")
-        .iter()
-        .any(|field| field == "id"));
+    assert!(
+        alternatives
+            .iter()
+            .any(|alternative| alternative["required"] == serde_json::json!(["id"]))
+    );
+    assert!(
+        alternatives
+            .iter()
+            .any(|alternative| alternative["required"] == serde_json::json!(["envId"]))
+    );
+    assert!(
+        !get["then"]["required"]
+            .as_array()
+            .expect("required fields")
+            .iter()
+            .any(|field| field == "id")
+    );
 }

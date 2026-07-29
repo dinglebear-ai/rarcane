@@ -1,6 +1,6 @@
 use serde_json::json;
 
-use super::{parse_args_from, run, usage, Command, SetupCommand};
+use super::{Command, SetupCommand, parse_args_from, run, usage};
 use crate::app::local_help;
 use crate::config::ArcaneConfig;
 

@@ -29,7 +29,10 @@ async fn status_returns_ok() {
 async fn destructive_action_requires_confirm_before_network() {
     let _guard = DESTRUCTIVE_ENV_LOCK.lock().await;
     let previous = std::env::var_os("RARCANE_MCP_ALLOW_DESTRUCTIVE");
-    std::env::remove_var("RARCANE_MCP_ALLOW_DESTRUCTIVE");
+    // SAFETY: edition 2024 marks set_var/remove_var unsafe because they race
+    // with concurrent environment reads. DESTRUCTIVE_ENV_LOCK (held above)
+    // serialises every test that touches this variable.
+    unsafe { std::env::remove_var("RARCANE_MCP_ALLOW_DESTRUCTIVE") };
     let state = loopback_state();
     let error = execute_tool_without_peer_for_test(
         &state,
@@ -44,9 +47,12 @@ async fn destructive_action_requires_confirm_before_network() {
     .await
     .expect_err("destructive action should be blocked");
     assert!(error.to_string().contains("confirmation required"));
-    match previous {
-        Some(value) => std::env::set_var("RARCANE_MCP_ALLOW_DESTRUCTIVE", value),
-        None => std::env::remove_var("RARCANE_MCP_ALLOW_DESTRUCTIVE"),
+    // SAFETY: still holding DESTRUCTIVE_ENV_LOCK; see above.
+    unsafe {
+        match previous {
+            Some(value) => std::env::set_var("RARCANE_MCP_ALLOW_DESTRUCTIVE", value),
+            None => std::env::remove_var("RARCANE_MCP_ALLOW_DESTRUCTIVE"),
+        }
     }
 }
 

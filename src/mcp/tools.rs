@@ -4,14 +4,14 @@
 //! endpoint selection, and safety gates live in `app.rs`.
 
 use rmcp::{
-    service::{ElicitationError, Peer},
     RoleServer,
+    service::{ElicitationError, Peer},
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
-use crate::actions::{execute_service_action, ArcaneAction};
+use crate::actions::{ArcaneAction, execute_service_action};
 use crate::app::{ElicitedNameOutcome, ScaffoldIntent};
 use crate::server::AppState;
 

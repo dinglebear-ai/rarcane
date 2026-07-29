@@ -14,7 +14,8 @@
 [package]
 name = "xtask"
 version = "0.4.4"
-edition = "2021"
+edition = "2024"
+rust-version = "1.92"
 # Exclude from crates.io — this is a private automation crate.
 publish = false
 
@@ -24,3 +25,6 @@ publish = false
 #           Add more only if a new command truly requires it.
 anyhow = "1"
 walkdir = "2"
+
+[lints.clippy]
+mod_module_files = "deny"
