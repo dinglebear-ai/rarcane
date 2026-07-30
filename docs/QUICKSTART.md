@@ -1,3 +1,9 @@
+---
+title: "rarcane Quickstart"
+created: "2026-07-30"
+updated: "2026-07-30"
+---
+
 # rarcane Quickstart
 
 ## 1. Configure Arcane

@@ -1,3 +1,9 @@
+---
+title: "Scaffold Intent Handoff Spec"
+created: "2026-07-30"
+updated: "2026-07-30"
+---
+
 # Scaffold Intent Handoff Spec
 
 ## Status

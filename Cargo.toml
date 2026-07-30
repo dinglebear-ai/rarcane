@@ -1,29 +1,71 @@
-# =============================================================================
-# Cargo.toml — Workspace root for the rarcane project
-#
-# TEMPLATE: This is a cargo workspace containing two crates:
-#   - . (the main library/binary crate)
-#   - xtask/ (repo automation: dist, ci, symlink-docs, check-env)
-#
-# When creating your own server, rename "rarcane" and add your own
-# workspace members if needed.
-# =============================================================================
-
 [workspace]
-# TEMPLATE: Add any additional crates here (e.g. a shared types crate).
 members = [".", "xtask"]
-resolver = "2"
+resolver = "3"
 
-[package]
-name = "rarcane"
+[workspace.package]
 version = "0.4.4"
 edition = "2024"
 rust-version = "1.97.1"
-categories = ["command-line-utilities", "development-tools"]
+authors = ["dinglebear.ai <hello@dinglebear.ai>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://rarcane.dinglebear.ai"
+repository = "https://github.com/dinglebear-ai/rarcane"
+
+[workspace.dependencies]
+anyhow = "1"
+axum = "0.8"
+chrono = "0.4"
+dirs = "6"
+dotenvy = "0.15.7"
+reqwest = { version = "0.13", default-features = false, features = ["json", "query", "rustls"] }
+rmcp = { version = "=3.0.0-beta.2", default-features = false }
+schemars = "=1.2.1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tempfile = "3"
+thiserror = "2"
+tokio = "1"
+toml = "1.1"
+tower = "0.5"
+tower-http = "0.7"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+url = "2"
+walkdir = "2"
+
+[workspace.lints.rustdoc]
+broken_intra_doc_links = "deny"
+invalid_codeblock_attributes = "deny"
+invalid_rust_codeblocks = "deny"
+private_intra_doc_links = "warn"
+bare_urls = "warn"
+unescaped_backticks = "warn"
+invalid_html_tags = "deny"
+redundant_explicit_links = "warn"
+
+[workspace.lints.rust]
+missing_crate_level_docs = "deny"
+unsafe_op_in_unsafe_fn = "deny"
+
+[workspace.lints.clippy]
+mod_module_files = "deny"
+missing_safety_doc = "deny"
+
+[package]
+name = "rarcane"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+readme.workspace = true
+homepage.workspace = true
+repository.workspace = true
+publish = false
+categories = ["command-line-utilities", "api-bindings", "virtualization", "development-tools"]
 keywords = ["mcp", "arcane", "docker", "containers", "rmcp"]
-repository = "https://github.com/jmagar/rarcane"
-homepage = "https://github.com/jmagar/rarcane#readme"
-description = "Rust MCP server and CLI for Arcane Docker and container management with action-dispatched tools and plugin packaging."
+description = "MCP server and CLI for Arcane: manage Docker containers, images, networks, volumes, and Compose projects over stdio or streamable HTTP, with auth."
 autobins = false
 
 [[bin]]
@@ -32,11 +74,11 @@ path = "src/main.rs"
 
 [dependencies]
 # Async runtime
-tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal", "sync", "time"] }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "net", "signal", "sync", "time"] }
 
 # HTTP / MCP transport
-axum = "0.8"
-rmcp = { version = "=3.0.0-beta.2", default-features = false, features = [
+axum.workspace = true
+rmcp = { workspace = true, features = [
   "server",
   "macros",
   "transport-streamable-http-server",
@@ -44,39 +86,39 @@ rmcp = { version = "=3.0.0-beta.2", default-features = false, features = [
   "elicitation",
   "schemars",
 ] }
-tower-http = { version = "0.7", features = ["cors", "limit", "trace"] }
-tower = { version = "0.5", features = ["limit"] }
+tower-http = { workspace = true, features = ["cors", "limit", "trace"] }
+tower = { workspace = true, features = ["limit"] }
 
 # Serialization
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-schemars = "1.2.1"
+serde.workspace = true
+serde_json.workspace = true
+schemars.workspace = true
 
 # Time
-chrono = "0.4"
+chrono.workspace = true
 
 # Config
-toml = "1.1"
+toml.workspace = true
 
 # OAuth + JWT
 lab-auth = { git = "https://github.com/dinglebear-ai/labby.git", rev = "87cec3241f9baef22335de9cc8629ebbcd8ba047", package = "lab-auth" }
-url = "2"
+url.workspace = true
 
 # Logging
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+tracing.workspace = true
+tracing-subscriber = { workspace = true, features = ["env-filter", "json"] }
 
 # HTTP client (stub — replace with your real transport: GraphQL, REST, gRPC, etc.)
-reqwest = { version = "0.13", default-features = false, features = ["json", "query", "rustls"] }
+reqwest.workspace = true
 
 # Platform dirs — for default_data_dir() (~/.rarcane detection)
 # TEMPLATE: Used in config.rs default_data_dir(). Keep this dep.
-dirs = "6"
+dirs.workspace = true
 
 # Errors
-anyhow = "1"
-thiserror = "2"
-dotenvy = "0.15.7"
+anyhow.workspace = true
+thiserror.workspace = true
+dotenvy.workspace = true
 
 [features]
 default = []
@@ -84,12 +126,17 @@ test-support = []
 
 [dev-dependencies]
 rarcane = { path = ".", features = ["test-support"] }
-tempfile = "3"
-tower = { version = "0.5", features = ["util"] }
-rmcp = { version = "=3.0.0-beta.2", default-features = false, features = [
+tempfile.workspace = true
+tower = { workspace = true, features = ["util"] }
+rmcp = { workspace = true, features = [
   "client",
   "transport-child-process",
 ] }
 
-[lints.clippy]
-mod_module_files = "deny"
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+targets = ["x86_64-unknown-linux-gnu"]

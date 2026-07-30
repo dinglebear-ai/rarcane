@@ -1,5 +1,7 @@
 ---
 title: "Docker"
+created: "2026-07-30"
+updated: "2026-07-30"
 doc_type: "guide"
 status: "active"
 owner: "rarcane"
@@ -68,7 +70,7 @@ CMD ["rarcane", "serve", "mcp"]
 ```yaml
 services:
   rarcane-mcp:
-    image: ghcr.io/jmagar/rarcane-mcp:${VERSION:-latest}
+    image: ghcr.io/dinglebear-ai/rarcane:${VERSION:-latest}
     build:
       context: .
       dockerfile: config/Dockerfile

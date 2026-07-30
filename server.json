@@ -2,11 +2,11 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "ai.dinglebear/arcane-rmcp",
   "title": "Arcane RMCP",
-  "description": "Rust MCP server and CLI for Arcane Docker and container management.",
+  "description": "MCP server and CLI for Arcane: manage Docker containers, images, networks, volumes, and Compose projects over stdio or streamable HTTP, with auth.",
   "version": "0.4.4",
-  "websiteUrl": "https://github.com/jmagar/rarcane",
+  "websiteUrl": "https://rarcane.dinglebear.ai",
   "repository": {
-    "url": "https://github.com/jmagar/rarcane",
+    "url": "https://github.com/dinglebear-ai/rarcane",
     "source": "github",
     "id": "1247261735"
   },
@@ -68,8 +68,8 @@
           "format": "string",
           "isRequired": false,
           "isSecret": false,
-          "default": "jmagar/rarcane",
-          "placeholder": "jmagar/rarcane"
+          "default": "dinglebear-ai/rarcane",
+          "placeholder": "dinglebear-ai/rarcane"
         },
         {
           "name": "ARCANE_RMCP_RELEASE_BASE_URL",
@@ -103,7 +103,7 @@
       },
       "buildInfo": {
         "version": "0.4.4",
-        "repository": "https://github.com/jmagar/rarcane"
+        "repository": "https://github.com/dinglebear-ai/rarcane"
       }
     }
   }

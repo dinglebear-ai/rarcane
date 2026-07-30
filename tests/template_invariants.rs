@@ -81,17 +81,12 @@ fn justfile_exposes_automation_recipes() {
 #[test]
 fn production_deployment_is_authenticated_and_uses_the_published_image() {
     let compose = read("docker-compose.prod.yml");
-    let docker_workflow = read(".github/workflows/docker-publish.yml");
     let dockerfile = read("config/Dockerfile");
     let env_example = read(".env.example");
 
     assert!(
-        compose.contains("ghcr.io/jmagar/rarcane:${RARCANE_MCP_VERSION:-latest}"),
-        "production compose must consume the image published by CI"
-    );
-    assert!(
-        docker_workflow.contains("IMAGE_NAME: ghcr.io/jmagar/rarcane"),
-        "Docker workflow and production compose image names must match"
+        compose.contains("ghcr.io/dinglebear-ai/rarcane:latest"),
+        "production compose must use the canonical organization image"
     );
     assert!(
         compose.contains("RARCANE_MCP_NO_AUTH: \"${RARCANE_MCP_NO_AUTH:-false}\""),

@@ -146,7 +146,16 @@ just schema-docs
 just schema-docs-check
 ```
 
-Treats `src/actions.rs::ACTION_SPECS` as canonical and verifies schema docs, help text, README, and plugin skill mentions. Generated output lives in `docs/MCP_SCHEMA.md`.
+Treats `src/actions.rs::ACTION_SPECS` as canonical and verifies schema docs, help text, README, and plugin skill mentions. Generated output lives in `docs/MCP_SCHEMA.md` and includes the fleet documentation frontmatter required for maintained docs.
+
+### `install.sh`
+
+```bash
+bash scripts/install.sh
+ARCANE_RMCP_VERSION=v1.2.3 bash scripts/install.sh
+```
+
+Installs the release binary from the canonical `dinglebear-ai/rarcane` repository. The root `install.sh` is a compatibility shim that delegates here.
 
 ### `check-version-sync.sh`
 

@@ -1,3 +1,9 @@
+---
+title: "Plugin Surfaces"
+created: "2026-07-30"
+updated: "2026-07-30"
+---
+
 # Plugin Surfaces
 
 This template ships one service plugin package with three host-specific entrypoints:

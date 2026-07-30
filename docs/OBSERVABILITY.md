@@ -1,3 +1,9 @@
+---
+title: "Observability"
+created: "2026-07-30"
+updated: "2026-07-30"
+---
+
 # Observability
 
 ## HTTP probes

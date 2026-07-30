@@ -10,7 +10,7 @@ on:
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
-    runs-on: [self-hosted, unraid]
+    runs-on: [self-hosted, ci-pool-ops]
     timeout-minutes: 20
     permissions:
       security-events: write

@@ -1,3 +1,9 @@
+---
+title: "MCP Schema Contract"
+created: "2026-07-30"
+updated: "2026-07-30"
+---
+
 # MCP Schema Contract
 
 Generated from `src/actions.rs` and checked against the schema, README, skill docs, help text, and scope routing.

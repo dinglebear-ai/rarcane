@@ -11,18 +11,17 @@ vulnerability scanning, and system operations.
 |---|---|
 | Repository | `git@github.com:dinglebear-ai/rarcane.git` (default branch `main`) |
 | Cargo workspace | 2 members: `.` (the `rarcane` crate) and `xtask` |
-| Edition / MSRV | 2021 / Rust 1.90 |
-| MCP runtime | `rmcp` 2.2.0 |
+| Edition / MSRV | 2024 / Rust 1.97.1 |
+| MCP runtime | `rmcp` 3.0.0-beta.2 |
 | Binary / CLI | `rarcane` |
 | npm package | `arcane-rmcp` (`packages/arcane-rmcp/`) |
 | MCP tool name | `arcane` (one action-dispatched tool) |
 | Default HTTP port | `40110` |
 | Config home | `~/.rarcane` on hosts, `/data` in containers |
 
-The repo doubles as the reference implementation for the rmcp server family, so
-some files still carry `TEMPLATE:` markers describing how to adapt the shape for
-a new service. Those markers are guidance for derived repos — rarcane itself is
-a real, operational service, not a stub.
+The repo doubles as the reference implementation for the rmcp server family,
+while its root manifest and runtime configuration describe the live rarcane
+service rather than scaffold placeholders.
 
 ## Module map
 

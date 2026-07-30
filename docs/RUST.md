@@ -1,5 +1,7 @@
 ---
 title: "Rust Build Setup"
+created: "2026-07-30"
+updated: "2026-07-30"
 doc_type: "guide"
 status: "active"
 owner: "rarcane"
@@ -9,14 +11,14 @@ audience:
 scope: "service"
 source_of_truth: false
 upstream_refs:
-  - "https://github.com/jmagar/soma/blob/main/docs/RUST.md"
+  - "https://github.com/dinglebear-ai/soma/blob/main/docs/RUST.md"
 last_reviewed: "2026-07-13"
 ---
 
 # Rust Build Setup
 
 This repo follows the build conventions of the rmcp server family. The
-canonical reference is [soma/docs/RUST.md](https://github.com/jmagar/soma/blob/main/docs/RUST.md).
+canonical reference is [soma/docs/RUST.md](https://github.com/dinglebear-ai/soma/blob/main/docs/RUST.md).
 
 All family repos share a common Cargo configuration model: heavy lifting lives
 in `~/.cargo/config.toml` on the developer's machine; per-repo

@@ -1,7 +1,7 @@
 {
   "name": "rarcane-mcp",
-  "description": "Rust MCP server for Arcane Docker management — manage containers, images, networks, volumes, compose projects, and more.",
-  "homepage": "https://github.com/dinglebear-ai/rarcane",
+  "description": "MCP server and CLI for Arcane: manage Docker containers, images, networks, volumes, and Compose projects over stdio or streamable HTTP, with auth.",
+  "homepage": "https://rarcane.dinglebear.ai",
   "repository": "https://github.com/dinglebear-ai/rarcane",
   "license": "MIT",
   "keywords": [

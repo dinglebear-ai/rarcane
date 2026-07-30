@@ -1,3 +1,9 @@
+---
+title: "Architecture"
+created: "2026-07-30"
+updated: "2026-07-30"
+---
+
 # Architecture
 
 `rarcane` is an upstream-client MCP server and CLI for Arcane. It deliberately

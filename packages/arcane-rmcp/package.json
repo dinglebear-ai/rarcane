@@ -1,16 +1,16 @@
 {
   "name": "arcane-rmcp",
   "version": "0.4.4",
-  "description": "Node launcher for the Arcane Rust MCP server and rarcane CLI for Docker/container management.",
+  "description": "MCP server and CLI for Arcane: manage Docker containers, images, networks, volumes, and Compose projects over stdio or streamable HTTP, with auth.",
   "license": "MIT",
-  "homepage": "https://github.com/jmagar/rarcane#readme",
+  "homepage": "https://rarcane.dinglebear.ai",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jmagar/rarcane.git",
+    "url": "git+https://github.com/dinglebear-ai/rarcane.git",
     "directory": "packages/arcane-rmcp"
   },
   "bugs": {
-    "url": "https://github.com/jmagar/rarcane/issues"
+    "url": "https://github.com/dinglebear-ai/rarcane/issues"
   },
   "bin": {
     "rarcane": "bin/rarcane.js"
