@@ -13,9 +13,13 @@
 
 [package]
 name = "xtask"
-version = "0.4.4"
-edition = "2024"
-rust-version = "1.97.1"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
 # Exclude from crates.io — this is a private automation crate.
 publish = false
 
@@ -23,8 +27,8 @@ publish = false
 # TEMPLATE: anyhow for ergonomic errors, walkdir for filesystem traversal.
 #           These are the only deps needed for the four required commands.
 #           Add more only if a new command truly requires it.
-anyhow = "1"
-walkdir = "2"
+anyhow.workspace = true
+walkdir.workspace = true
 
-[lints.clippy]
-mod_module_files = "deny"
+[lints]
+workspace = true

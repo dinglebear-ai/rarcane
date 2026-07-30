@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/jmagar/rarcane/docs/contracts/scaffold-intent.schema.json",
+  "$id": "https://github.com/dinglebear-ai/rarcane/docs/contracts/scaffold-intent.schema.json",
   "title": "rarcane scaffold intent",
   "description": "Intent payload returned by the scaffold_intent MCP elicitation action and consumed by the scaffold-project skill. This contract is side-effect free: it describes what to plan, not permission to mutate files.",
   "type": "object",

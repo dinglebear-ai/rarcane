@@ -1,5 +1,7 @@
 ---
 title: "Scripts"
+created: "2026-07-30"
+updated: "2026-07-30"
 doc_type: "guide"
 status: "active"
 owner: "rarcane"
@@ -94,7 +96,7 @@ preflight() {
 
 One-line install:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jmagar/rarcane/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/dinglebear-ai/rarcane/main/scripts/install.sh | bash
 ```
 
 After install: `rarcane doctor` to validate the environment.

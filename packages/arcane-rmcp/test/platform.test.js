@@ -23,7 +23,7 @@ test("maps supported platforms to release assets", () => {
 });
 
 test("rejects unsupported platforms", () => {
-  assert.throws(() => targetFor("darwin", "arm64"), /Unsupported platform/);
+  assert.throws(() => targetFor("linux", "ppc64"), /Unsupported platform/);
 });
 
 test("uses the package version as the binary tag by default", () => {

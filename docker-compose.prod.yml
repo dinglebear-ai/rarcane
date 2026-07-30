@@ -35,7 +35,7 @@ services:
   rarcane:
     <<: *common-service
     # TEMPLATE: Replace with your image path.
-    image: ghcr.io/jmagar/rarcane:latest
+    image: ghcr.io/dinglebear-ai/rarcane:latest
     container_name: rarcane
     env_file:
       - path: .env

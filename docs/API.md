@@ -1,3 +1,9 @@
+---
+title: "rarcane API"
+created: "2026-07-30"
+updated: "2026-07-30"
+---
+
 # rarcane API
 
 `rarcane` exposes one MCP tool named `arcane` and equivalent CLI commands.

@@ -1,5 +1,7 @@
 ---
 title: "systemd Deployment"
+created: "2026-07-30"
+updated: "2026-07-30"
 doc_type: "guide"
 status: "active"
 owner: "rarcane"
@@ -25,7 +27,7 @@ install -m 755 target/release/rarcane ~/.local/bin/rarcane
 Or use the install script:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jmagar/rarcane/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/dinglebear-ai/rarcane/main/scripts/install.sh | bash
 ```
 
 The binary installs to `~/.local/bin/`. Verify it's in `$PATH`:

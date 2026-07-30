@@ -1,3 +1,9 @@
+---
+title: "rmcp-server Patterns"
+created: "2026-07-30"
+updated: "2026-07-30"
+---
+
 # rmcp-server Patterns
 
 Canonical reference for all patterns used across the Rust MCP server family:
@@ -828,7 +834,7 @@ CMD ["rarcane", "serve", "mcp"]
 ```yaml
 services:
   rarcane-mcp:
-    image: ghcr.io/jmagar/rarcane-mcp:${VERSION:-latest}
+    image: ghcr.io/dinglebear-ai/rarcane:${VERSION:-latest}
     build:
       context: .
       dockerfile: config/Dockerfile
@@ -877,7 +883,7 @@ networks:
 
 ```bash
 #!/usr/bin/env bash
-# One-line install: curl -fsSL https://raw.githubusercontent.com/jmagar/rarcane-mcp/main/install.sh | bash
+# One-line install: curl -fsSL https://raw.githubusercontent.com/dinglebear-ai/rarcane/main/scripts/install.sh | bash
 set -euo pipefail
 
 REPO="jmagar/rarcane-mcp"
@@ -887,7 +893,7 @@ INSTALL_DIR="${HOME}/.local/bin"
 # Detect platform
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 ARCH="$(uname -m)"
-case "${ARCH}" in x86_64) ARCH="x86_64" ;; aarch64|arm64) ARCH="aarch64" ;; esac
+case "${ARCH}" in x86_64|amd64) ARCH="x86_64" ;; *) echo "unsupported architecture: ${ARCH}" >&2; exit 1 ;; esac
 
 echo "Installing ${BINARY} from ${REPO}..."
 mkdir -p "${INSTALL_DIR}"
@@ -1419,15 +1425,15 @@ Runs on push/PR to main:
 
 ### `.github/workflows/docker-publish.yml`
 Runs on push to main + tags:
-- Multi-platform build (linux/amd64, linux/arm64)
-- Push to `ghcr.io/jmagar/<repo>:latest` on main, `:<version>` on tags
+- x86_64 Linux image build
+- Push to `ghcr.io/dinglebear-ai/<repo>:latest` on main, `:<version>` on tags
 - Trivy vulnerability scan
 - SBOM generation
 - MCP registry publish on version tags
 
 ### `.github/workflows/release.yml`
 Runs on version tags (`v*`):
-- Build release binaries for linux/amd64 and linux/arm64
+- Build release binaries for x86_64 Linux and Windows
 - Create GitHub Release with binary assets
 - Update `install.sh` download URLs
 
@@ -1580,14 +1586,14 @@ Or via GitHub OAuth:
   "title": "Arcane MCP",
   "description": "One-line description of what the server does.",
   "repository": {
-    "url": "https://github.com/jmagar/rarcane-mcp",
+    "url": "https://github.com/dinglebear-ai/rarcane",
     "source": "github"
   },
   "version": "0.1.0",
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/jmagar/rarcane-mcp:0.1.0",
+      "identifier": "ghcr.io/dinglebear-ai/rarcane:0.1.0",
       "version": "0.1.0",
       "environmentVariables": [
         {
@@ -1628,7 +1634,7 @@ The `release.yml` workflow updates `server.json` version automatically on tag:
   run: |
     VERSION="${GITHUB_REF_NAME#v}"
     jq --arg v "$VERSION" \
-       --arg img "ghcr.io/jmagar/rarcane-mcp:${VERSION}" \
+       --arg img "ghcr.io/dinglebear-ai/rarcane:${VERSION}" \
        '.version = $v | .packages[0].identifier = $img | .packages[0].version = $v' \
        server.json > server.tmp && mv server.tmp server.json
 ```
@@ -1662,8 +1668,8 @@ plugins/
 {
   "name": "rarcane-mcp",
   "description": "Arcane service MCP server for Codex.",
-  "homepage": "https://github.com/jmagar/rarcane-mcp",
-  "repository": "https://github.com/jmagar/rarcane-mcp",
+  "homepage": "https://github.com/dinglebear-ai/rarcane",
+  "repository": "https://github.com/dinglebear-ai/rarcane",
   "license": "MIT",
   "keywords": ["rarcane", "mcp", "homelab"],
   "skills": "./skills/",
@@ -1675,7 +1681,7 @@ plugins/
     "developerName": "Jacob Magar",
     "category": "Infrastructure",
     "capabilities": ["Read"],
-    "websiteURL": "https://github.com/jmagar/rarcane-mcp",
+    "websiteURL": "https://github.com/dinglebear-ai/rarcane",
     "defaultPrompt": [
       "Check Arcane service status.",
       "List all items in Arcane.",
@@ -2477,7 +2483,7 @@ INSTALL_DIR="${HOME}/.local/bin"
 mkdir -p "${INSTALL_DIR}"
 
 # Download and install
-BINARY_URL="https://github.com/jmagar/rarcane-mcp/releases/latest/download/rarcane-linux-amd64"
+BINARY_URL="https://github.com/dinglebear-ai/rarcane/releases/latest/download/rarcane-x86_64.tar.gz"
 curl -fsSL "${BINARY_URL}" -o "${INSTALL_DIR}/rarcane"
 chmod +x "${INSTALL_DIR}/rarcane"
 
@@ -2630,7 +2636,6 @@ preflight() {
     arch="$(uname -m)"
     case "${arch}" in
         x86_64)  arch="amd64" ;;
-        aarch64|arm64) arch="arm64" ;;
         *) echo "✗ Unsupported arch: ${arch}"; (( errors++ )) ;;
     esac
     [[ "${os}" == "linux" ]] || { echo "✗ Only Linux is supported (got: ${os})"; (( errors++ )); }
@@ -3076,7 +3081,7 @@ The web UI uses the Aurora design system — a shadcn-compatible registry of
 128 components designed for operator-grade AI products.
 
 Registry URL: `https://aurora.tootie.tv`
-GitHub: `https://github.com/jmagar/aurora-design-system`
+GitHub: `https://github.com/dinglebear-ai/aurora-design-system`
 
 ### Setup
 

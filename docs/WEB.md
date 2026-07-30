@@ -1,3 +1,9 @@
+---
+title: "Web UI"
+created: "2026-07-30"
+updated: "2026-07-30"
+---
+
 # Web UI
 
 `rarcane` does not ship a web UI. It is an upstream-client server whose supported

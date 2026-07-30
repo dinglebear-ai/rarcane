@@ -34,7 +34,7 @@ function releaseVersion(env = process.env) {
 }
 
 function releaseBaseUrl(env = process.env) {
-  const repo = env.ARCANE_RMCP_REPO || "jmagar/rarcane";
+  const repo = env.ARCANE_RMCP_REPO || "dinglebear-ai/rarcane";
   return env.ARCANE_RMCP_RELEASE_BASE_URL || `https://github.com/${repo}/releases/download`;
 }
 

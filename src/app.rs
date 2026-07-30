@@ -142,7 +142,7 @@ impl ArcaneService {
             }),
             ElicitedNameOutcome::Unsupported => json!({
                 "message": "Elicitation is not supported by this MCP client.",
-                "hint": "Try a client like Claude.app that supports MCP elicitation (spec 2025-06-18).",
+                "hint": "Try a client like Claude.app that supports MCP elicitation (protocol 2025-11-25).",
                 "fallback_greeting": "Hello, World! (elicitation unavailable)",
             }),
         }

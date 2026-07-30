@@ -1,5 +1,7 @@
 ---
 title: "CI"
+created: "2026-07-30"
+updated: "2026-07-30"
 doc_type: "guide"
 status: "active"
 owner: "rarcane"
@@ -42,8 +44,8 @@ Runs on push/PR to main:
 ### `.github/workflows/docker-publish.yml`
 
 Runs on push to main + tags:
-- Multi-platform build (linux/amd64, linux/arm64)
-- Push to `ghcr.io/jmagar/<repo>:latest` on main, `:<version>` on tags
+- x86_64 Linux image build
+- Push to `ghcr.io/dinglebear-ai/<repo>:latest` on main, `:<version>` on tags
 - Trivy vulnerability scan
 - SBOM generation
 - MCP registry publish on version tags

@@ -1,7 +1,6 @@
 # arcane-rmcp
 
-`arcane-rmcp` is a Rust MCP server and CLI for managing Docker through an
-[Arcane](https://github.com/ofkm/arcane) API server.
+MCP server and CLI for Arcane: manage Docker containers, images, networks, volumes, and Compose projects over stdio or streamable HTTP, with auth.
 
 It exposes one MCP tool, `arcane`, plus the `rarcane` CLI. Agents can inspect
 Arcane environments, manage compose projects, containers, images, networks,
@@ -381,7 +380,7 @@ CLI shim      (src/cli.rs)         argv -> service -> stdout
 - GitHub Releases publish the `rarcane` binary consumed by the npm launcher.
 - The npm package name is `arcane-rmcp`; the installed binary alias is
   `rarcane`.
-- Docker/OCI metadata uses `ghcr.io/jmagar/rarcane:<version>`.
+- Docker/OCI metadata uses `ghcr.io/dinglebear-ai/rarcane:<version>`.
 - `plugins/rarcane/.mcp.json` must launch `npx -y arcane-rmcp mcp` so stdio
   clients start the MCP transport rather than the HTTP server.
 - The root README is curated. Generated or source-of-truth details live in

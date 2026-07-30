@@ -1,3 +1,9 @@
+---
+title: "MCP Registry Publishing Guide"
+created: "2026-07-30"
+updated: "2026-07-30"
+---
+
 # MCP Registry Publishing Guide
 
 This guide explains how to publish your MCP server to the
@@ -70,7 +76,7 @@ The private key must correspond to a DNS TXT record you publish at
 ```
 
 This grants you the `github.com/<your-username>/` namespace automatically,
-e.g. `github.com/jmagar/rarcane-mcp`.
+e.g. `github.com/dinglebear-ai/rarcane`.
 
 ---
 
@@ -98,7 +104,7 @@ The relevant workflow snippet:
   run: |
     VERSION="${GITHUB_REF_NAME#v}"
     jq --arg v "$VERSION" \
-       --arg img "ghcr.io/jmagar/rarcane-mcp:${VERSION}" \
+       --arg img "ghcr.io/dinglebear-ai/rarcane:${VERSION}" \
        '.version = $v | .packages[0].identifier = $img | .packages[0].version = $v' \
        server.json > server.tmp && mv server.tmp server.json
 
@@ -139,7 +145,7 @@ the MCP registry.
 
 You must authenticate for the domain or GitHub user that prefixes your server name.
 If your `name` is `tv.tootie/rarcane-mcp`, you must authenticate with DNS for
-`tv.tootie`. If your `name` is `github.com/jmagar/rarcane-mcp`, use GitHub OAuth.
+`tv.tootie`. If your `name` is `github.com/dinglebear-ai/rarcane`, use GitHub OAuth.
 
 ### "Invalid schema"
 
