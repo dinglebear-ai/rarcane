@@ -44,7 +44,7 @@ jobs:
 
       - name: Build
         if: matrix.language == 'rust'
-        run: cargo build --release
+        run: cargo build --locked
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@7188fc363630916deb702c7fdcf4e481b751f97a # v4.37.1
