@@ -9,8 +9,8 @@ system operations through stdio MCP, Streamable HTTP MCP, or direct shell
 commands.
 
 **30-second path:** set `RARCANE_API_URL` and `RARCANE_API_KEY`, then run
-`npx -y arcane-rmcp status` -> start loopback HTTP with
-`RARCANE_MCP_HOST=127.0.0.1 npx -y arcane-rmcp serve` -> call `tools/call` with
+`npx -y @dinglebear/rarcane-mcp status` -> start loopback HTTP with
+`RARCANE_MCP_HOST=127.0.0.1 npx -y @dinglebear/rarcane-mcp serve` -> call `tools/call` with
 `{"action":"status"}`.
 
 **Status:** operational RMCP upstream-client server. Write-capable; destructive
@@ -51,7 +51,7 @@ multi-tenant isolation, or passing Arcane API keys through MCP tool arguments.
 | Repository | `arcane-rmcp` |
 | Rust crate | `rarcane` |
 | Binary / CLI | `rarcane` |
-| npm package | `arcane-rmcp` |
+| npm package | `@dinglebear/rarcane-mcp` |
 | npm binary alias | `rarcane` |
 | MCP server name | `rarcane` in bundled plugin/client config |
 | MCP tool | `arcane` |
@@ -82,7 +82,7 @@ registered as `rarcane`, but the tool clients call is `arcane`.
 
 | Path | Command | Best for | Notes |
 |---|---|---|---|
-| npm / npx | `npx -y arcane-rmcp --help` | Local MCP clients and quick trials. | Downloads the matching `rarcane` binary from GitHub Releases. |
+| npm / npx | `npx -y @dinglebear/rarcane-mcp --help` | Local MCP clients and quick trials. | Downloads the matching `rarcane` binary from GitHub Releases. |
 | Release installer | `curl -fsSL https://raw.githubusercontent.com/dinglebear-ai/rarcane/main/scripts/install.sh \| bash` | Host installs without Node. | Installs `rarcane` for the current Linux host. |
 | Docker / Compose | `docker compose up -d` | Shared HTTP MCP deployments. | Reads `.env` and exposes container port `40110`. |
 | Build from source | `cargo build --release` | Development and audits. | Produces `target/release/rarcane`. |
@@ -93,9 +93,9 @@ registered as `rarcane`, but the tool clients call is `arcane`.
 Run the stdio MCP server or CLI without a manual binary install:
 
 ```bash
-npx -y arcane-rmcp --help
-npx -y arcane-rmcp mcp
-npx -y arcane-rmcp status
+npx -y @dinglebear/rarcane-mcp --help
+npx -y @dinglebear/rarcane-mcp mcp
+npx -y @dinglebear/rarcane-mcp status
 ```
 
 The npm package downloads `rarcane` during `postinstall`. Override download
@@ -136,13 +136,13 @@ arguments or CLI `--params-json`.
 ### 2. Run A Safe CLI Call
 
 ```bash
-npx -y arcane-rmcp status
+npx -y @dinglebear/rarcane-mcp status
 ```
 
 ### 3. Start Loopback HTTP MCP
 
 ```bash
-RARCANE_MCP_HOST=127.0.0.1 npx -y arcane-rmcp serve
+RARCANE_MCP_HOST=127.0.0.1 npx -y @dinglebear/rarcane-mcp serve
 ```
 
 In another shell:
@@ -228,7 +228,7 @@ arguments.
 
 | Surface | Status | Entry point | Purpose |
 |---|---:|---|---|
-| MCP stdio | Supported | `rarcane mcp`, `npx -y arcane-rmcp mcp` | Local child-process MCP clients. |
+| MCP stdio | Supported | `rarcane mcp`, `npx -y @dinglebear/rarcane-mcp mcp` | Local child-process MCP clients. |
 | MCP HTTP | Supported | `rarcane serve`, `POST /mcp` | Streamable HTTP MCP for local or shared server deployments. |
 | CLI | Supported | `rarcane <command>` | Scriptable parity and debugging. |
 | Prompt | Supported | `quick_start` | Guides a client through `status` and public `help`. |
@@ -378,10 +378,10 @@ CLI shim      (src/cli.rs)         argv -> service -> stdout
   `.release-please-manifest.json`, and `server.json` must agree on the released
   version.
 - GitHub Releases publish the `rarcane` binary consumed by the npm launcher.
-- The npm package name is `arcane-rmcp`; the installed binary alias is
+- The npm package name is `@dinglebear/rarcane-mcp`; the installed binary alias is
   `rarcane`.
 - Docker/OCI metadata uses `ghcr.io/dinglebear-ai/rarcane:<version>`.
-- `plugins/rarcane/.mcp.json` must launch `npx -y arcane-rmcp mcp` so stdio
+- `plugins/rarcane/.mcp.json` must launch `npx -y @dinglebear/rarcane-mcp mcp` so stdio
   clients start the MCP transport rather than the HTTP server.
 - The root README is curated. Generated or source-of-truth details live in
   `src/actions.rs`, `docs/MCP_SCHEMA.md`, and the package/registry manifests.

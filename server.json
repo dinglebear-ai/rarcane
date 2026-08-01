@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "ai.dinglebear/arcane-rmcp",
+  "name": "ai.dinglebear/rarcane",
   "title": "Arcane RMCP",
   "description": "MCP server and CLI for Arcane: manage Docker containers, images, networks, volumes, and Compose projects over stdio or streamable HTTP, with auth.",
   "version": "0.4.4",
@@ -24,7 +24,7 @@
     {
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
-      "identifier": "arcane-rmcp",
+      "identifier": "@dinglebear/rarcane-mcp",
       "version": "0.4.4",
       "runtimeHint": "npx",
       "packageArguments": [
@@ -98,8 +98,8 @@
       "namespace": "ai.dinglebear",
       "dnsDomain": "dinglebear.ai",
       "distribution": {
-        "npm": "arcane-rmcp@0.4.4",
-        "nodePackage": "arcane-rmcp"
+        "npm": "@dinglebear/rarcane-mcp@0.4.4",
+        "nodePackage": "@dinglebear/rarcane-mcp"
       },
       "buildInfo": {
         "version": "0.4.4",
