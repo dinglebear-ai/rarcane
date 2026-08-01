@@ -86,7 +86,7 @@
         {
           "type": "json",
           "path": "server.json",
-          "jsonpath": "$.packages[?(@.identifier == '@dinglebear/rarcane-mcp')].version"
+          "jsonpath": "$.packages[?(@.identifier == '@dinglebear/rarcane')].version"
         },
         {
           "type": "json",

@@ -1,5 +1,5 @@
 {
-  "name": "@dinglebear/rarcane-mcp",
+  "name": "@dinglebear/rarcane",
   "version": "0.4.4",
   "description": "MCP server and CLI for Arcane: manage Docker containers, images, networks, volumes, and Compose projects over stdio or streamable HTTP, with auth.",
   "license": "MIT",

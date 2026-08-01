@@ -24,7 +24,7 @@
     {
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
-      "identifier": "@dinglebear/rarcane-mcp",
+      "identifier": "@dinglebear/rarcane",
       "version": "0.4.4",
       "runtimeHint": "npx",
       "packageArguments": [
@@ -98,8 +98,8 @@
       "namespace": "ai.dinglebear",
       "dnsDomain": "dinglebear.ai",
       "distribution": {
-        "npm": "@dinglebear/rarcane-mcp@0.4.4",
-        "nodePackage": "@dinglebear/rarcane-mcp"
+        "npm": "@dinglebear/rarcane@0.4.4",
+        "nodePackage": "@dinglebear/rarcane"
       },
       "buildInfo": {
         "version": "0.4.4",

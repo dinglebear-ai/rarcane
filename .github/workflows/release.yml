@@ -198,7 +198,7 @@ jobs:
         id: published
         shell: bash
         run: |
-          if npm view "@dinglebear/rarcane-mcp@${{ steps.npm-version.outputs.version }}" version >/dev/null 2>&1; then
+          if npm view "@dinglebear/rarcane@${{ steps.npm-version.outputs.version }}" version >/dev/null 2>&1; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
           else
             echo "exists=false" >> "$GITHUB_OUTPUT"
