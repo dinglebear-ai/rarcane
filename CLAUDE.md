@@ -14,7 +14,7 @@ vulnerability scanning, and system operations.
 | Edition / MSRV | 2024 / Rust 1.97.1 |
 | MCP runtime | `rmcp` 3.0.0-beta.2 |
 | Binary / CLI | `rarcane` |
-| npm package | `arcane-rmcp` (`packages/arcane-rmcp/`) |
+| npm package | `@dinglebear/rarcane` (`packages/arcane-rmcp/`) |
 | MCP tool name | `arcane` (one action-dispatched tool) |
 | Default HTTP port | `40110` |
 | Config home | `~/.rarcane` on hosts, `/data` in containers |

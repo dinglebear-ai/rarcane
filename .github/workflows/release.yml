@@ -176,6 +176,11 @@ jobs:
       - name: Install npm test dependencies
         if: ${{ hashFiles('packages/arcane-rmcp/package-lock.json') != '' }}
         run: npm ci --ignore-scripts --prefix packages/arcane-rmcp
+      - name: Validate npm publication identity
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm whoami >/dev/null
+
       - name: Verify npm package version matches release tag
         id: npm-version
         shell: bash
@@ -193,7 +198,7 @@ jobs:
         id: published
         shell: bash
         run: |
-          if npm view "arcane-rmcp@${{ steps.npm-version.outputs.version }}" version >/dev/null 2>&1; then
+          if npm view "@dinglebear/rarcane@${{ steps.npm-version.outputs.version }}" version >/dev/null 2>&1; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
           else
             echo "exists=false" >> "$GITHUB_OUTPUT"

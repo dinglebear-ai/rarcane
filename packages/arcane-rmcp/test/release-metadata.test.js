@@ -35,8 +35,8 @@ test("release-please paths cover and transform every published version", () => {
 
   const publisher = server._meta["io.modelcontextprotocol.registry/publisher-provided"];
   assert.equal(server.version, next);
-  assert.equal(server.packages.find((entry) => entry.identifier === "arcane-rmcp").version, next);
-  assert.equal(publisher.distribution.npm, `arcane-rmcp@${next}`);
+  assert.equal(server.packages.find((entry) => entry.identifier === "@dinglebear/rarcane").version, next);
+  assert.equal(publisher.distribution.npm, `@dinglebear/rarcane@${next}`);
   assert.equal(publisher.buildInfo.version, next);
 });
 
