@@ -65,7 +65,7 @@ repository.workspace = true
 publish = false
 categories = ["command-line-utilities", "api-bindings", "virtualization", "development-tools"]
 keywords = ["mcp", "arcane", "docker", "containers", "rmcp"]
-description = "MCP server and CLI for Arcane: manage Docker containers, images, networks, volumes, and Compose projects over stdio or streamable HTTP, with auth."
+description = "Arcane Docker and Compose management over MCP and CLI with authenticated stdio and HTTP."
 autobins = false
 
 [[bin]]
