@@ -1,6 +1,6 @@
 # arcane-rmcp
 
-MCP server and CLI for Arcane: manage Docker containers, images, networks, volumes, and Compose projects over stdio or streamable HTTP, with auth.
+Arcane Docker and Compose management over MCP and CLI with authenticated stdio and HTTP.
 
 It exposes one MCP tool, `arcane`, plus the `rarcane` CLI. Agents can inspect
 Arcane environments, manage compose projects, containers, images, networks,
