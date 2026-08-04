@@ -155,6 +155,11 @@ jobs:
 
       - name: cargo deny check
         uses: EmbarkStudios/cargo-deny-action@3c6349835b2b7b196a839186cb8b78e02f7b5f25 # v2
+        env:
+          # cargo-deny only reads dependency metadata. Pin the toolchain already
+          # baked into the isolated action image so rust-toolchain.toml does not
+          # trigger an impossible network install inside the container.
+          RUSTUP_TOOLCHAIN: 1.85.0
         with:
           command: check
           arguments: --all-features

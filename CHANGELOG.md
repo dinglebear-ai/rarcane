@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
                Format: ## [X.Y.Z] — YYYY-MM-DD
                Use Added / Changed / Deprecated / Removed / Fixed / Security headers. -->
 
+## [Unreleased]
+
+### Fixed
+
+- Keep Cargo Deny on the Rust toolchain baked into its isolated action image so offline runner jobs do not attempt a network install.
+
+### Changed
+
+- Bind the production MCP port only to DOOKIE's Tailscale and LAN addresses instead of every host interface.
+
 ## [0.4.4](https://github.com/jmagar/rarcane/compare/v0.4.3...v0.4.4) (2026-07-18)
 
 
