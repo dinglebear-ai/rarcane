@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Relicense Dinglebear-owned original work under AGPL-3.0-only and document separate commercial licensing; third-party material retains its original terms.
 - Bind the production MCP port only to DEVHOST's Tailscale and LAN addresses instead of every host interface.
 
 ## [0.4.4](https://github.com/jmagar/rarcane/compare/v0.4.3...v0.4.4) (2026-07-18)
