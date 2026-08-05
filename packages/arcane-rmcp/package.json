@@ -1,8 +1,8 @@
 {
   "name": "@dinglebear/rarcane",
   "version": "0.4.4",
+  "license": "AGPL-3.0-only",
   "description": "Arcane Docker and Compose management over MCP and CLI with authenticated stdio and HTTP.",
-  "license": "MIT",
   "homepage": "https://rarcane.dinglebear.ai",
   "repository": {
     "type": "git",
