@@ -18,6 +18,12 @@ on:
       NPM_TOKEN:
         description: "npm publication token"
         required: true
+      KACHE_S3_ACCESS_KEY:
+        description: "Shared MinIO cache access key"
+        required: false
+      KACHE_S3_SECRET_KEY:
+        description: "Shared MinIO cache secret key"
+        required: false
   workflow_dispatch:
     inputs:
       tag_name:
@@ -96,6 +102,11 @@ jobs:
         with:
           toolchain: 1.97.1
           targets: ${{ matrix.target }}
+          s3-access-key: ${{ secrets.KACHE_S3_ACCESS_KEY }}
+          s3-secret-key: ${{ secrets.KACHE_S3_SECRET_KEY }}
+          s3-endpoint: ${{ vars.KACHE_S3_ENDPOINT }}
+          s3-bucket: ${{ vars.KACHE_S3_BUCKET }}
+          s3-prefix: ${{ vars.KACHE_S3_PREFIX }}
       - name: Install pinned cross toolchain
         if: matrix.target == 'x86_64-pc-windows-msvc'
         run: |
