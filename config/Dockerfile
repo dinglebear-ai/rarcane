@@ -126,8 +126,8 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD curl -sf http://localhost:40110/health || exit 1
 
 # MCP registry label — used by Claude Code plugin discovery.
-# TEMPLATE: Replace with your registry path: "tv.tootie/yourservice-mcp"
-LABEL io.modelcontextprotocol.server.name="tv.tootie/arcane-rmcp"
+# TEMPLATE: Replace with your registry path: "tv.nashost/yourservice-mcp"
+LABEL io.modelcontextprotocol.server.name="tv.nashost/arcane-rmcp"
 
 # Entrypoint handles permission setup and privilege drop.
 # CMD is the default argument passed to entrypoint.sh.

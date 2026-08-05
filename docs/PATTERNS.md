@@ -1582,7 +1582,7 @@ Or via GitHub OAuth:
 ```json
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "tv.tootie/rarcane-mcp",
+  "name": "tv.nashost/rarcane-mcp",
   "title": "Arcane MCP",
   "description": "One-line description of what the server does.",
   "repository": {
@@ -1641,7 +1641,7 @@ The `release.yml` workflow updates `server.json` version automatically on tag:
 
 ### Name namespace
 
-The `name` field uses reverse-DNS format: `tv.tootie/<service>-mcp`. Verify you
+The `name` field uses reverse-DNS format: `tv.nashost/<service>-mcp`. Verify you
 own the domain before publishing to the official registry.
 
 ---

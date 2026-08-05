@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Bind the production MCP port only to DOOKIE's Tailscale and LAN addresses instead of every host interface.
+- Bind the production MCP port only to DEVHOST's Tailscale and LAN addresses instead of every host interface.
 
 ## [0.4.4](https://github.com/jmagar/rarcane/compare/v0.4.3...v0.4.4) (2026-07-18)
 
