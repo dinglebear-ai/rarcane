@@ -1582,7 +1582,7 @@ Or via GitHub OAuth:
 ```json
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "tv.tootie/rarcane-mcp",
+  "name": "tv.nashost/rarcane-mcp",
   "title": "Arcane MCP",
   "description": "One-line description of what the server does.",
   "repository": {
@@ -1641,7 +1641,7 @@ The `release.yml` workflow updates `server.json` version automatically on tag:
 
 ### Name namespace
 
-The `name` field uses reverse-DNS format: `tv.tootie/<service>-mcp`. Verify you
+The `name` field uses reverse-DNS format: `tv.nashost/<service>-mcp`. Verify you
 own the domain before publishing to the official registry.
 
 ---
@@ -3080,7 +3080,7 @@ impl AppState {
 The web UI uses the Aurora design system — a shadcn-compatible registry of
 128 components designed for operator-grade AI products.
 
-Registry URL: `https://aurora.tootie.tv`
+Registry URL: `https://aurora.example.internal`
 GitHub: `https://github.com/dinglebear-ai/aurora-design-system`
 
 ### Setup
@@ -3091,7 +3091,7 @@ cd apps/web
 # Already configured if using the template — see apps/web/components.json
 
 # 2. Install Aurora token layer (required first)
-pnpm dlx shadcn@latest add https://aurora.tootie.tv/r/aurora-tokens.json
+pnpm dlx shadcn@latest add https://aurora.example.internal/r/aurora-tokens.json
 
 # 3. Install all Aurora components
 pnpm dlx shadcn@latest add @aurora/aurora-button @aurora/aurora-card @aurora/aurora-badge \
@@ -3121,7 +3121,7 @@ pnpm dlx shadcn@latest add @aurora/aurora-button @aurora/aurora-card @aurora/aur
     "hooks": "@/hooks"
   },
   "registries": {
-    "@aurora": "https://aurora.tootie.tv/r/{name}.json"
+    "@aurora": "https://aurora.example.internal/r/{name}.json"
   }
 }
 ```
