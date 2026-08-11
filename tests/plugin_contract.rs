@@ -77,7 +77,7 @@ fn plugin_manifests_share_identity_and_connection_settings() {
     assert_eq!(mcp["mcpServers"]["rarcane"]["command"], "npx");
     assert_eq!(
         mcp["mcpServers"]["rarcane"]["args"],
-        serde_json::json!(["-y", "arcane-rmcp", "mcp"])
+        serde_json::json!(["-y", "@dinglebear/rarcane", "mcp"])
     );
     assert_eq!(
         gemini["mcpServers"]["rarcane"]["url"],

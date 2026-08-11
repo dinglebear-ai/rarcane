@@ -182,17 +182,16 @@ Claude Code and Codex share `plugins/rarcane/.mcp.json`:
 {
   "mcpServers": {
     "rarcane": {
-      "type": "http",
-      "url": "${user_config.server_url}/mcp",
-      "headers": {
-        "Authorization": "Bearer ${user_config.api_token}"
-      }
+      "command": "npx",
+      "args": ["-y", "@dinglebear/rarcane", "mcp"]
     }
   }
 }
 ```
 
-Gemini carries equivalent MCP config directly in `gemini-extension.json` because its interpolation model is different.
+The npm launcher resolves the published scoped package. Gemini carries equivalent
+HTTP MCP config directly in `gemini-extension.json` because its interpolation
+model is different.
 
 ## Skills
 
