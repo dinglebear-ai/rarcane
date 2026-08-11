@@ -274,7 +274,10 @@ PLUGIN_ROOT=plugins/rarcane scripts/validate-plugin-layout.sh
 just validate-plugin
 ```
 
-Validates Claude, Codex, and Gemini plugin manifests, shared MCP config, skills, sensitive fields, the rule that plugin manifests do not contain `version`, and the rule that the plugin ships no lifecycle hooks.
+Validates Claude, Codex, and Gemini plugin manifests, the shared MCP config and
+its `@dinglebear/rarcane` npm launcher, skills, sensitive fields, the rule that
+plugin manifests do not contain `version`, and the rule that the plugin ships no
+lifecycle hooks.
 
 ---
 
