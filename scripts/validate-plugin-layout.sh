@@ -73,7 +73,7 @@ check "Gemini Authorization header uses api_token" "jq -er '.mcpServers.rarcane.
 check "MCP config exists" "test -f '${MCP_JSON}'"
 check "MCP config is valid JSON" "jq empty '${MCP_JSON}'"
 check "MCP server is named rarcane" "jq -er '.mcpServers.rarcane' '${MCP_JSON}'"
-check "MCP transport uses the npm stdio launcher" "jq -er '.mcpServers.rarcane.command == \"npx\" and .mcpServers.rarcane.args == [\"-y\", \"arcane-rmcp\", \"mcp\"]' '${MCP_JSON}'"
+check "MCP transport uses the published npm stdio launcher" "jq -er '.mcpServers.rarcane.command == \"npx\" and .mcpServers.rarcane.args == [\"-y\", \"@dinglebear/rarcane\", \"mcp\"]' '${MCP_JSON}'"
 
 check "Gemini extension declares no hooks" "jq -er 'has(\"hooks\") | not' '${GEMINI_EXTENSION_JSON}'"
 check "plugin ships no hooks directory" "test ! -e '${PLUGIN_ROOT}/hooks'"
