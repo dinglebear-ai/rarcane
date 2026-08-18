@@ -62,6 +62,7 @@ fn justfile_exposes_automation_recipes() {
         "up:",
         "down:",
         "release:",
+        "smoke:",
     ] {
         assert!(justfile.contains(recipe), "Justfile missing {recipe}");
     }
@@ -70,11 +71,29 @@ fn justfile_exposes_automation_recipes() {
         !justfile.contains("install-tools:") && !justfile.contains("bootstrap: install-tools"),
         "development tools are provisioned globally by mise, not installed by project recipes"
     );
+    assert!(
+        !justfile.contains("cargo run -- greet") && !justfile.contains("cargo run -- echo"),
+        "Justfile must not expose removed greet/echo CLI commands"
+    );
 
     let lefthook = read("lefthook.yml");
     assert!(
         lefthook.contains("mise install"),
         "lefthook should direct missing-tool failures to the mise-managed toolchain"
+    );
+}
+
+#[test]
+fn entrypoint_preserves_credential_free_diagnostics() {
+    let entrypoint = read("entrypoint.sh");
+    assert!(
+        entrypoint.contains("serve|mcp|call|\"\"")
+            && entrypoint.contains("require_arcane_credentials"),
+        "server and upstream-call modes must enforce Arcane credentials"
+    );
+    assert!(
+        entrypoint.contains("status|watch|doctor|setup|help|--help|-h|--version|-V|version"),
+        "diagnostic and metadata commands must remain available without Arcane credentials"
     );
 }
 

@@ -22,9 +22,9 @@ dev:
 mcp:
     cargo run -- mcp
 
-# Run a quick CLI greeting (smoke test without a running server)
-greet:
-    cargo run -- greet --name "Developer"
+# Run a quick local CLI smoke test without a running server or upstream credentials
+smoke:
+    cargo run -- status
 
 # Run the doctor pre-flight check
 doctor:
