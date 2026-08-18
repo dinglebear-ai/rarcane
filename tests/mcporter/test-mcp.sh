@@ -27,10 +27,10 @@
 #   environment, so they are intentionally NOT asserted here. Add them only as
 #   tolerant/skipped cases when a live backend is available.
 #
-# Server is assumed to be running as HTTP on localhost:40060 (the `just dev` port).
+# Server is assumed to be running as HTTP on localhost:40110 (the `just dev` port).
 # Credentials are sourced from ~/.rarcane/.env OR environment variables:
 #   RARCANE_MCP_HOST  (default: localhost)
-#   RARCANE_MCP_PORT  (default: 40060)
+#   RARCANE_MCP_PORT  (default: 40110)
 #   RARCANE_MCP_TOKEN (optional; omit for no-auth dev mode)
 #
 # Usage:
@@ -126,7 +126,7 @@ load_env() {
   local host="${RARCANE_MCP_HOST:-localhost}"
   # Remap bind address 0.0.0.0 → localhost for outbound connections
   [[ "${host}" == "0.0.0.0" ]] && host="localhost"
-  local port="${RARCANE_MCP_PORT:-40060}"
+  local port="${RARCANE_MCP_PORT:-40110}"
   MCP_URL="http://${host}:${port}/mcp"
 
   local token="${RARCANE_MCP_TOKEN:-}"
@@ -723,7 +723,7 @@ main() {
     log_error ""
     log_error "To diagnose:"
     log_error "  just dev                            # start in no-auth dev mode"
-    log_error "  curl http://localhost:40060/health   # check health endpoint"
+    log_error "  curl http://localhost:40110/health   # check health endpoint"
     log_error "  docker ps | grep rarcane-mcp        # check Docker container"
     exit 2
   }

@@ -138,7 +138,7 @@ impl ArcaneClient {
                 .unwrap_or_else(|| String::from_utf8_lossy(&bytes).into_owned());
             return Err(ArcaneError::Http {
                 status,
-                message: redact(&message),
+                message: redact(&message, &self.api_key),
             });
         }
         if bytes.iter().all(u8::is_ascii_whitespace) {
@@ -161,6 +161,11 @@ pub fn encode_path_segment(value: &str) -> String {
     url::form_urlencoded::byte_serialize(value.as_bytes()).collect()
 }
 
-fn redact(message: &str) -> String {
-    message.replace("X-API-Key", "[redacted-header]")
+fn redact(message: &str, api_key: &str) -> String {
+    let redacted = message.replace("X-API-Key", "[redacted-header]");
+    if api_key.is_empty() {
+        redacted
+    } else {
+        redacted.replace(api_key, "[redacted-secret]")
+    }
 }

@@ -2,7 +2,7 @@
 # Justfile — Development and deployment commands for the Arcane MCP server
 #
 # TEMPLATE: Replace "rarcane" with your binary/service name throughout.
-#           Replace port 40060 with your service's port if different.
+#           Replace port 40110 with your service's port if different.
 #
 # Usage: just <recipe>
 # =============================================================================
@@ -13,7 +13,7 @@ default:
 
 # ── Development ───────────────────────────────────────────────────────────────
 
-# Run the MCP server in development mode (HTTP transport 40060, no auth)
+# Run the MCP server in development mode (HTTP transport 40110, no auth)
 # WARNING: RARCANE_MCP_NO_AUTH=true is safe only because HOST is 127.0.0.1 (loopback)
 dev:
     RARCANE_MCP_HOST=127.0.0.1 RARCANE_MCP_NO_AUTH=true cargo run -- serve mcp
@@ -256,14 +256,14 @@ logs:
 # ── Health & diagnostics ──────────────────────────────────────────────────────
 
 # Check the MCP server health endpoint (no auth required)
-# TEMPLATE: Change port 40060 if you use a different port
+# TEMPLATE: Change port 40110 if you use a different port
 health:
     #!/usr/bin/env bash
     set -euo pipefail
     if command -v jq >/dev/null 2>&1; then
-        curl -sf http://localhost:40060/health | jq .
+        curl -sf http://localhost:40110/health | jq .
     else
-        curl -sf http://localhost:40060/health | python3 -m json.tool
+        curl -sf http://localhost:40110/health | python3 -m json.tool
     fi
 
 # Verify that the running Docker/systemd service matches the current artifact
@@ -283,7 +283,7 @@ status:
         echo "Set RARCANE_MCP_TOKEN or use 'just dev' (no-auth mode)"
         exit 1
     fi
-    curl -sf http://localhost:40060/mcp \
+    curl -sf http://localhost:40110/mcp \
         -H "Authorization: Bearer ${TOKEN}" \
         -H "Content-Type: application/json" \
         -H "Accept: application/json, text/event-stream" \

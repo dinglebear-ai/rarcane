@@ -1058,7 +1058,7 @@ curl -H "Authorization: Bearer $RARCANE_API_KEY" \
 | unifi-mcp (rustifi) | 7474 | `unifi` |
 | tailscale-mcp (rustscale) | 7575 | `tailscale` |
 | apprise-mcp | 8765 | `apprise` |
-| rarcane | 40060 | `rarcane` |
+| rarcane | 40110 | `rarcane` |
 
 ---
 
@@ -2541,7 +2541,7 @@ rarcane-mcp v0.1.0 — environment check
 
   MCP server
   ──────────────────────────────────────────────
-  ✓ MCP port 40060:    available  # TEMPLATE: canonical rarcane port is 40060 (RARCANE_MCP_PORT)
+  ✓ MCP port 40110:    available  # TEMPLATE: canonical rarcane port is 40110 (RARCANE_MCP_PORT)
   ✓ Auth mode:         no-auth (RARCANE_NOAUTH=true)
 
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2679,8 +2679,8 @@ preflight() {
         || echo "⚠  RARCANE_API_KEY: not set (required before running the server)"
 
     # 7. Port availability (warn only)
-    # TEMPLATE: canonical rarcane port is 40060; update this default when adapting
-    local port="${RARCANE_MCP_PORT:-40060}"
+    # TEMPLATE: canonical rarcane port is 40110; update this default when adapting
+    local port="${RARCANE_MCP_PORT:-40110}"
     if ss -tlnp "sport = :${port}" 2>/dev/null | awk 'NR>1' | grep -q .; then
         echo "⚠  Port ${port}: already in use (change RARCANE_MCP_PORT if needed)"
     else

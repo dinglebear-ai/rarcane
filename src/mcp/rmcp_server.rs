@@ -84,17 +84,20 @@ impl ServerHandler for ArcaneRmcpServer {
             .map(ToOwned::to_owned);
 
         let auth = require_auth_context(&self.state, &context)?;
-        if let Some(action_str) = action_opt.as_deref() {
+        let action_spec = if let Some(action_str) = action_opt.as_deref() {
             reject_unknown_action_before_scope(action_str)?;
-            spec_for(action_str, subaction_opt.as_deref())
-                .map_err(|error| ErrorData::invalid_params(error.to_string(), None))?;
-        }
+            Some(
+                spec_for(action_str, subaction_opt.as_deref())
+                    .map_err(|error| ErrorData::invalid_params(error.to_string(), None))?,
+            )
+        } else {
+            None
+        };
         // Only scope-check when a known action is present; dispatch_example will
         // return the validation error for a missing action below.
-        if let (Some(auth), Some(action_str)) = (auth, action_opt.as_deref())
-            && let Some(required_scope) = spec_for(action_str, subaction_opt.as_deref())
-                .expect("validated action spec")
-                .required_scope
+        if let (Some(auth), Some(action_str), Some(spec)) =
+            (auth, action_opt.as_deref(), action_spec)
+            && let Some(required_scope) = spec.required_scope
         {
             check_scope(auth, required_scope, action_str)?;
         }

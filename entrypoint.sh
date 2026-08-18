@@ -83,16 +83,16 @@ fi
 #           Comment out or remove lines for vars that have safe defaults.
 #           The goal: fail loudly here rather than silently misbehave later.
 #
-# Arcane (uncomment for a real service):
-#   if [ -z "${RARCANE_API_KEY:-}" ]; then
-#       echo "ERROR: RARCANE_API_KEY is not set." >&2
-#       echo "       Set it in your .env file or Docker environment." >&2
-#       exit 1
-#   fi
-#
-# The template binary works without API credentials (stub mode), so no
-# required vars are checked here. Uncomment the block above when you replace
-# the stub with a real upstream service.
+if [ -z "${RARCANE_API_URL:-}" ]; then
+    echo "ERROR: RARCANE_API_URL is not set." >&2
+    echo "       Set it in your .env file or Docker environment." >&2
+    exit 1
+fi
+if [ -z "${RARCANE_API_KEY:-}" ]; then
+    echo "ERROR: RARCANE_API_KEY is not set." >&2
+    echo "       Set it in your .env file or Docker environment." >&2
+    exit 1
+fi
 
 # ── Drop privileges and exec the service ──────────────────────────────────────
 # `gosu` (Alpine) or `gosu` (Debian/Ubuntu) replaces the current process

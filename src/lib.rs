@@ -6,7 +6,7 @@
 //! Public modules:
 //!   [`app`]     — `ArcaneService` (business logic)
 //!   [`config`]  — `Config`, `ArcaneConfig`, `McpConfig`
-//!   `arcane` — `ArcaneClient` (transport stub)
+//!   `arcane` — `ArcaneClient` (bounded Arcane REST transport)
 //!   [`mcp`]     — MCP protocol layer (tools, schemas, prompts, server handler)
 //!   [`server`]  — `AppState`, `AuthPolicy`, HTTP router
 

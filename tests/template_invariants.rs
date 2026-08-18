@@ -97,7 +97,14 @@ fn production_deployment_is_authenticated_and_uses_the_published_image() {
         "production compose must require a bearer token"
     );
     assert!(!compose.contains("RARCANE_NOAUTH: \"true\""));
-    assert!(env_example.contains("RARCANE_MCP_VERSION=v0.4.0"));
+    let release_manifest = json(".release-please-manifest.json");
+    let release_version = release_manifest["."]
+        .as_str()
+        .expect("release manifest root version must be a string");
+    assert!(
+        env_example.contains(&format!("RARCANE_MCP_VERSION=v{release_version}")),
+        ".env.example should track the current release version"
+    );
     let base_images: Vec<_> = dockerfile
         .lines()
         .filter(|line| line.starts_with("FROM "))
