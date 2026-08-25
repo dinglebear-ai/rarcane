@@ -29,9 +29,18 @@ inputs:
     required: false
     default: ""
   s3-endpoint:
-    description: S3-compatible endpoint used when credentials are supplied.
+    description: >-
+      Shared kache remote S3 endpoint. Load-bearing internal address — never
+      hardcode it here or in a caller workflow. It is provisioned as an
+      organization-level Actions variable, so callers pass it through as
+      `s3-endpoint: ${{ vars.KACHE_S3_ENDPOINT }}`. Composite actions cannot
+      read the org context directly, so it must arrive as an input. Left
+      empty, this runner falls back to LOCAL-ONLY caching — unless an AWS
+      profile named "kache" is already configured, in which case a shared
+      remote is expected and a missing endpoint fails the step instead of
+      silently degrading to a local-only cache.
     required: false
-    default: "https://s3.tootie.tv"
+    default: ""
   s3-bucket:
     description: S3 bucket containing the shared cache.
     required: false
@@ -195,6 +204,10 @@ runs:
           echo "kache remote: s3://$KACHE_S3_BUCKET/$KACHE_S3_PREFIX via $KACHE_S3_ENDPOINT"
         elif [ -r "$host_credentials_file" ] &&
              grep -Eq '^[[:space:]]*\[kache\][[:space:]]*$' "$host_credentials_file"; then
+          if [ -z "${KACHE_S3_ENDPOINT:-}" ]; then
+            echo "::error::s3-endpoint input is empty (expected the org variable KACHE_S3_ENDPOINT to be passed in) - an AWS 'kache' profile is configured so a shared remote is required, but there is no endpoint to configure it with"
+            exit 1
+          fi
           cat > "$config_file" <<TOML
         [cache]
         local_store = "$cache_dir"
@@ -205,12 +218,12 @@ runs:
         [cache.remote]
         type = "s3"
         bucket = "kache"
-        endpoint = "http://192.0.2.2:9000"
+        endpoint = "$KACHE_S3_ENDPOINT"
         region = "us-east-1"
         prefix = "rust"
         profile = "kache"
         TOML
-          echo "kache remote: s3://kache/rust via Nashost MinIO"
+          echo "kache remote: s3://kache/rust via shared MinIO"
         else
           cat > "$config_file" <<TOML
         [cache]
