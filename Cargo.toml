@@ -108,7 +108,7 @@ url.workspace = true
 tracing.workspace = true
 tracing-subscriber = { workspace = true, features = ["env-filter", "json"] }
 
-# HTTP client (stub — replace with your real transport: GraphQL, REST, gRPC, etc.)
+# HTTP client for Arcane REST API transport
 reqwest.workspace = true
 
 # Platform dirs — for default_data_dir() (~/.rarcane detection)

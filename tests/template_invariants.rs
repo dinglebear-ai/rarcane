@@ -62,6 +62,7 @@ fn justfile_exposes_automation_recipes() {
         "up:",
         "down:",
         "release:",
+        "smoke:",
     ] {
         assert!(justfile.contains(recipe), "Justfile missing {recipe}");
     }
@@ -70,11 +71,29 @@ fn justfile_exposes_automation_recipes() {
         !justfile.contains("install-tools:") && !justfile.contains("bootstrap: install-tools"),
         "development tools are provisioned globally by mise, not installed by project recipes"
     );
+    assert!(
+        !justfile.contains("cargo run -- greet") && !justfile.contains("cargo run -- echo"),
+        "Justfile must not expose removed greet/echo CLI commands"
+    );
 
     let lefthook = read("lefthook.yml");
     assert!(
         lefthook.contains("mise install"),
         "lefthook should direct missing-tool failures to the mise-managed toolchain"
+    );
+}
+
+#[test]
+fn entrypoint_preserves_credential_free_diagnostics() {
+    let entrypoint = read("entrypoint.sh");
+    assert!(
+        entrypoint.contains("serve|mcp|call|\"\"")
+            && entrypoint.contains("require_arcane_credentials"),
+        "server and upstream-call modes must enforce Arcane credentials"
+    );
+    assert!(
+        entrypoint.contains("status|watch|doctor|setup|help|--help|-h|--version|-V|version"),
+        "diagnostic and metadata commands must remain available without Arcane credentials"
     );
 }
 
@@ -97,7 +116,14 @@ fn production_deployment_is_authenticated_and_uses_the_published_image() {
         "production compose must require a bearer token"
     );
     assert!(!compose.contains("RARCANE_NOAUTH: \"true\""));
-    assert!(env_example.contains("RARCANE_MCP_VERSION=v0.4.0"));
+    let release_manifest = json(".release-please-manifest.json");
+    let release_version = release_manifest["."]
+        .as_str()
+        .expect("release manifest root version must be a string");
+    assert!(
+        env_example.contains(&format!("RARCANE_MCP_VERSION=v{release_version}")),
+        ".env.example should track the current release version"
+    );
     let base_images: Vec<_> = dockerfile
         .lines()
         .filter(|line| line.starts_with("FROM "))

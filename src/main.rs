@@ -3,8 +3,7 @@
 //! Modes:
 //!   `rarcane [serve]`        Start MCP HTTP server (default if no args)
 //!   `rarcane mcp`            Start MCP stdio transport
-//!   `rarcane greet ...`      CLI greet command
-//!   `rarcane echo ...`       CLI echo command
+//!   `rarcane call ...`       Dispatch an Arcane action through the shared service layer
 //!   `rarcane status`         CLI status command
 //!   `rarcane --help`         Print usage
 //!   `rarcane --version`      Print version
