@@ -1,6 +1,0 @@
-# Repo-relative paths or glob patterns allowed to exceed the default blob limit.
-# Keep this list short. Prefer Git LFS or generated artifacts outside git.
-#
-# Examples:
-# bin/rarcane
-# docs/references/**/*.md

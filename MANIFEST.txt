@@ -1,0 +1,20 @@
+Workspace cleanup archive for dinglebear-ai/rarcane
+Date: 2026-09-25
+Default: main
+
+STALE_BRANCHES 5
+STALE	chore/dependabot-off-privileged-runner	5e7a670e6347f088e62f743ef114f02865a4fbda
+STALE	chore/rmcp3-edition2024	282f26f02b6b84852e018a3aed151fbf69869c09
+STALE	chore/scrub-internal-identifiers-20260805	3f1abf2b349718345aabe6549220d7d5c6e187f2
+STALE	ci/fleet-operational-20260801	bb51b39c1f1c680ffc2e3cdb4c998fc573e19f5d
+STALE	codex/scoped-npm-package	f62438a6b4b2b96c7ef3268e3c6ce9a5d6bb27c6
+
+LOCAL_ONLY_BRANCHES 4
+LOCAL_ONLY	chore/dependabot-off-privileged-runner	5e7a670e6347f088e62f743ef114f02865a4fbda
+LOCAL_ONLY	chore/scrub-internal-identifiers-20260805	3f1abf2b349718345aabe6549220d7d5c6e187f2
+LOCAL_ONLY	ci/hosted-kache-minio-20260805	86135dacd5a0525ca34980f3c361591a7ce1b841
+LOCAL_ONLY	codex/scoped-npm-package	f62438a6b4b2b96c7ef3268e3c6ce9a5d6bb27c6
+
+STALE_WORKTREES 0
+
+WIP_SNAPSHOTS 0
