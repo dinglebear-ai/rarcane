@@ -7,7 +7,7 @@ version = "0.4.4"
 edition = "2024"
 rust-version = "1.97.1"
 authors = ["dinglebear.ai <hello@dinglebear.ai>"]
-license = "AGPL-3.0-only"
+license = "MIT"
 readme = "README.md"
 homepage = "https://rarcane.dinglebear.ai"
 repository = "https://github.com/dinglebear-ai/rarcane"
@@ -65,7 +65,7 @@ repository.workspace = true
 publish = false
 categories = ["command-line-utilities", "api-bindings", "virtualization", "development-tools"]
 keywords = ["mcp", "arcane", "docker", "containers", "rmcp"]
-description = "Arcane Docker and Compose management over MCP and CLI with authenticated stdio and HTTP."
+description = "MCP server and CLI for Arcane: manage Docker containers, images, networks, volumes, and Compose projects over stdio or streamable HTTP, with auth."
 autobins = false
 
 [[bin]]

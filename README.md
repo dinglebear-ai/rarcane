@@ -1,6 +1,6 @@
 # arcane-rmcp
 
-Arcane Docker and Compose management over MCP and CLI with authenticated stdio and HTTP.
+MCP server and CLI for Arcane: manage Docker containers, images, networks, volumes, and Compose projects over stdio or streamable HTTP, with auth.
 
 It exposes one MCP tool, `arcane`, plus the `rarcane` CLI. Agents can inspect
 Arcane environments, manage compose projects, containers, images, networks,
@@ -477,4 +477,4 @@ gateway.
 
 ## License
 
-Original Dinglebear-authored portions of this project are licensed under [AGPL-3.0-only](LICENSE). Separate commercial licensing is available for organizations that need terms outside the AGPL. Third-party material remains under its original license. See [LICENSING.md](https://github.com/dinglebear-ai/rarcane/blob/main/LICENSING.md).
+MIT. See [LICENSE](LICENSE).

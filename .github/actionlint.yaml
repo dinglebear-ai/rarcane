@@ -1,9 +1,9 @@
 self-hosted-runner:
   labels:
     - rmcp-template
-    - nashost
+    - tootie
     - unraid
-    - devhost
+    - dookie
     - ci-pool-rust
     - ci-pool-python
     - ci-pool-typescript
