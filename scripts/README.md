@@ -173,9 +173,9 @@ RARCANE_MCP_TOKEN=... bash scripts/generate-cli.sh
 just generate-cli
 ```
 
-Generates a standalone CLI binary for this server via `mcporter generate-cli`. Requires a running server on port 40110 and `mcporter` in PATH. Caches a schema hash under `dist/.cache/` and skips regeneration when the tool schema is unchanged. The generated binary embeds the token — do not commit or share it.
+Generates a standalone CLI binary for this server via `mcporter generate-cli`. It targets the canonical rarcane HTTP MCP endpoint on port `40110`, matching `Config::default`, the Justfile, and the mcporter integration harness, and requires `mcporter` in PATH. Caches a schema hash under `dist/.cache/` and skips regeneration when the tool schema is unchanged. The generated binary embeds the token — do not commit or share it.
 
-**TEMPLATE:** Update the port and token env var name in this script when adapting.
+**TEMPLATE:** Update the port and token env var name together with the derived service configuration and integration harness when adapting.
 
 ### `pre-release-check.sh`
 

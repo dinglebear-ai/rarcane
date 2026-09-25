@@ -22,6 +22,7 @@
 #   - cargo nextest   → runs in CI
 #   - cargo fmt       → run manually with `cargo fmt`; CI catches violations
 #   - cargo check     → too slow for every commit; use `just check` manually
+#   - `just smoke`    → local binary smoke (`rarcane status`); keep explicit so hooks stay instant
 #   - cargo audit     → network call; runs in CI
 #   - gitleaks        → heavy scan; runs in CI
 #   - cargo xtask patterns → full-repo contract scan; runs in CI and `just template-check`

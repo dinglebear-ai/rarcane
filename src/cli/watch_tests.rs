@@ -31,7 +31,7 @@ fn server_state_display_degraded_404() {
 #[test]
 fn format_event_initial_up() {
     let line = format_event(
-        "http://localhost:40060",
+        "http://localhost:40110",
         &ServerState::Up,
         None,
         Duration::from_secs(0),
@@ -39,7 +39,7 @@ fn format_event_initial_up() {
     );
     assert!(line.contains("UP"), "initial UP line should mention UP");
     assert!(
-        line.contains("http://localhost:40060"),
+        line.contains("http://localhost:40110"),
         "line should include the base URL"
     );
 }
@@ -47,7 +47,7 @@ fn format_event_initial_up() {
 #[test]
 fn format_event_down() {
     let line = format_event(
-        "http://localhost:40060",
+        "http://localhost:40110",
         &ServerState::Down,
         Some(ServerState::Up),
         Duration::from_secs(30),
@@ -63,7 +63,7 @@ fn format_event_down() {
 #[test]
 fn format_event_recovery_from_down() {
     let line = format_event(
-        "http://localhost:40060",
+        "http://localhost:40110",
         &ServerState::Up,
         Some(ServerState::Down),
         Duration::from_secs(120),
@@ -83,7 +83,7 @@ fn format_event_recovery_from_down() {
 #[test]
 fn format_event_recovery_from_degraded() {
     let line = format_event(
-        "http://localhost:40060",
+        "http://localhost:40110",
         &ServerState::Up,
         Some(ServerState::Degraded(503)),
         Duration::from_secs(60),
@@ -102,7 +102,7 @@ fn format_event_recovery_from_degraded() {
 #[test]
 fn format_event_degraded() {
     let line = format_event(
-        "http://localhost:40060",
+        "http://localhost:40110",
         &ServerState::Degraded(500),
         Some(ServerState::Up),
         Duration::from_secs(5),

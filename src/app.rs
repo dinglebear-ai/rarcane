@@ -374,7 +374,6 @@ fn body_params(mode: BodyMode, params: &Value) -> Option<Value> {
     match mode {
         BodyMode::None => None,
         BodyMode::Params => Some(strip_control_params(params)),
-        BodyMode::ParamsWithoutControl => Some(strip_control_params(params)),
     }
 }
 

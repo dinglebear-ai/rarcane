@@ -46,6 +46,17 @@ fn upstream_response_limit_is_bounded() {
     assert!(std::hint::black_box(MAX_UPSTREAM_RESPONSE_BYTES) <= 8 * 1024 * 1024);
 }
 
+#[test]
+fn upstream_error_redaction_removes_header_name_and_api_key() {
+    let message = "authentication failed: X-API-Key secret-value is invalid";
+    let redacted = redact(message, "secret-value");
+
+    assert!(!redacted.contains("X-API-Key"));
+    assert!(!redacted.contains("secret-value"));
+    assert!(redacted.contains("[redacted-header]"));
+    assert!(redacted.contains("[redacted-secret]"));
+}
+
 #[tokio::test]
 async fn rejects_an_upstream_response_declared_over_the_limit() {
     let listener = std::net::TcpListener::bind("127.0.0.1:0").expect("listener should bind");

@@ -11,11 +11,9 @@ no-default-features = false
 
 [advisories]
 version = 2
-# The pinned lab-auth graph currently requires crypto-bigint 0.7.3 and spin
-# 0.9.8, whose entire compatible lines are yanked. Keep these visible in CI as
-# warnings until lab-auth can move off the affected RSA dependency graph; a
-# hard deny would make every build fail without a compatible replacement.
-yanked = "warn"
+# Yanked dependencies are not accepted. Keep the lockfile on supported patch
+# releases so withdrawn crates fail CI immediately.
+yanked = "deny"
 
 # Known advisories we've reviewed and accepted:
 ignore = [

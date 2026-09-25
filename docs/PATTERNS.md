@@ -1058,7 +1058,7 @@ curl -H "Authorization: Bearer $RARCANE_API_KEY" \
 | unifi-mcp (rustifi) | 7474 | `unifi` |
 | tailscale-mcp (rustscale) | 7575 | `tailscale` |
 | apprise-mcp | 8765 | `apprise` |
-| rarcane | 40060 | `rarcane` |
+| rarcane | 40110 | `rarcane` |
 
 ---
 
@@ -1732,10 +1732,10 @@ Maintain a parity table in `CLAUDE.md`:
 
 | Method | MCP | CLI |
 |---|---|---|
-| `service.greet(name)` | `rarcane(action="greet", name="...")` | `rarcane greet [--name N]` |
-| `service.echo(message)` | `rarcane(action="echo", message="...")` | `rarcane echo <message>` |
 | `service.status()` | `rarcane(action="status")` | `rarcane status` |
-| `service.help()` | `rarcane(action="help")` | `rarcane --help` |
+| `service.help()` | `rarcane(action="help")` | `rarcane help` |
+| `service.dispatch(container:list)` | `rarcane(action="container", subaction="list", env_id="env-1")` | `rarcane call --action container --subaction list --env-id env-1` |
+| `service.dispatch(system:prune)` | `rarcane(action="system", subaction="prune", env_id="env-1", confirm=true)` | `rarcane call --action system --subaction prune --env-id env-1 --confirm` |
 
 ---
 
@@ -2541,7 +2541,7 @@ rarcane-mcp v0.1.0 — environment check
 
   MCP server
   ──────────────────────────────────────────────
-  ✓ MCP port 40060:    available  # TEMPLATE: canonical rarcane port is 40060 (RARCANE_MCP_PORT)
+  ✓ MCP port 40110:    available  # TEMPLATE: canonical rarcane port is 40110 (RARCANE_MCP_PORT)
   ✓ Auth mode:         no-auth (RARCANE_NOAUTH=true)
 
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2679,8 +2679,8 @@ preflight() {
         || echo "⚠  RARCANE_API_KEY: not set (required before running the server)"
 
     # 7. Port availability (warn only)
-    # TEMPLATE: canonical rarcane port is 40060; update this default when adapting
-    local port="${RARCANE_MCP_PORT:-40060}"
+    # TEMPLATE: canonical rarcane port is 40110; update this default when adapting
+    local port="${RARCANE_MCP_PORT:-40110}"
     if ss -tlnp "sport = :${port}" 2>/dev/null | awk 'NR>1' | grep -q .; then
         echo "⚠  Port ${port}: already in use (change RARCANE_MCP_PORT if needed)"
     else
@@ -2753,20 +2753,12 @@ if [ ! -x "${BINARY}" ]; then
 fi
 
 # ── 2. Required env vars ──────────────────────────────────────────────────────
-# Fail fast with a clear message rather than a cryptic runtime error.
-# TEMPLATE: Add your service's required vars here.
-missing_vars=""
-for var in RARCANE_API_URL RARCANE_API_KEY; do
-    eval "val=\${${var}:-}"
-    if [ -z "${val}" ]; then
-        missing_vars="${missing_vars} ${var}"
-    fi
-done
-if [ -n "${missing_vars}" ]; then
-    echo "FATAL: required environment variables not set:${missing_vars}" >&2
-    echo "  Set them in your .env file or docker run -e flags." >&2
-    exit 1
-fi
+# Fail fast only for modes that actually construct the upstream client. Keep
+# doctor/setup/status/help and debug-shell passthrough usable during failures.
+require_arcane_credentials() {
+    [ -n "${RARCANE_API_URL:-}" ] || { echo "FATAL: RARCANE_API_URL is not set" >&2; exit 1; }
+    [ -n "${RARCANE_API_KEY:-}" ] || { echo "FATAL: RARCANE_API_KEY is not set" >&2; exit 1; }
+}
 
 # ── 3. Data directory ─────────────────────────────────────────────────────────
 mkdir -p "${DATA_DIR}/logs"
@@ -2778,7 +2770,7 @@ if ! chown -R 1000:1000 "${DATA_DIR}" 2>/dev/null; then
 fi
 
 # Verify the data dir is actually writable by UID 1000 before starting
-if ! su-exec 1000:1000 sh -c "touch ${DATA_DIR}/.write_test 2>/dev/null && rm -f ${DATA_DIR}/.write_test"; then
+if ! gosu 1000:1000 sh -c 'touch "$1/.write_test" 2>/dev/null && rm -f "$1/.write_test"' sh "${DATA_DIR}"; then
     echo "FATAL: ${DATA_DIR} is not writable by UID 1000" >&2
     echo "  Check the volume mount permissions." >&2
     exit 1
@@ -2800,19 +2792,32 @@ echo "[entrypoint] User:     1000:1000"
 [ -n "${RARCANE_MCP_HOST:-}" ] && echo "[entrypoint] MCP host: ${RARCANE_MCP_HOST}"
 
 # ── 6. Signal handling ────────────────────────────────────────────────────────
-# Let su-exec / the service handle SIGTERM cleanly.
+# Let gosu / the service handle SIGTERM cleanly.
 # Do NOT trap signals here — pass them through to the child process.
 
 # ── 7. Drop privileges and exec ──────────────────────────────────────────────
 # exec replaces this shell process — signals go directly to the service.
-exec su-exec 1000:1000 "${BINARY}" "$@"
+# The checked-in rarcane image is Debian-based and installs gosu. If a derived
+# image uses Alpine, switch both its Dockerfile and entrypoint to su-exec.
+case "${1:-}" in
+  serve|mcp|call|"")
+    require_arcane_credentials
+    exec gosu 1000:1000 "${BINARY}" "$@"
+    ;;
+  status|watch|doctor|setup|help|--help|-h|--version|-V|version)
+    exec gosu 1000:1000 "${BINARY}" "$@"
+    ;;
+  *)
+    exec gosu 1000:1000 "$@"
+    ;;
+esac
 ```
 
 ### Key principles
 
-1. **Fail fast** — exit 1 with clear message rather than starting in a broken state
-2. **Every assumption is checked** — binary exists, vars set, dir writable, files secured
-3. **exec, not run** — `exec su-exec` replaces the shell so PID 1 is the actual service
+1. **Fail fast where required** — upstream-dependent modes exit clearly, while repair/diagnostic commands remain usable
+2. **Every assumption is checked** — binary exists, required mode-specific vars are set, dir writable, files secured
+3. **exec, not run** — `exec gosu` replaces the shell so PID 1 is the actual service
 4. **No traps** — let signals pass through to the service for graceful shutdown
 5. **Log non-secret config** — operators need to see what the container started with
 6. **Idempotent** — running entrypoint twice should be safe (chown, mkdir -p, etc.)
@@ -2946,13 +2951,16 @@ async fn api_dispatch(
 
 ### API parity table
 
+For an application-platform derivative that adds a REST shim, keep all transports
+calling the same service method rather than reimplementing behavior per surface.
+
 | Surface | Call pattern |
 |---|---|
-| MCP | `rarcane(action="greet", name="Alice")` |
-| REST | `POST /v1/rarcane {"action":"greet","params":{"name":"Alice"}}` |
-| CLI | `rarcane greet --name Alice` |
+| MCP | `<service>(action="status")` |
+| REST | `POST /v1/<service> {"action":"status"}` |
+| CLI | `<service> status` |
 
-All three call `state.service.greet(Some("Alice"))`.
+All three should call the shared `state.service.status()` implementation.
 
 ---
 

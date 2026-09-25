@@ -78,7 +78,6 @@ pub enum ActionTransport {
 pub enum BodyMode {
     None,
     Params,
-    ParamsWithoutControl,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -770,7 +769,7 @@ pub const ACTION_SPECS: &[ActionSpec] = &[
         id = Some("volume"),
         params = &["backupId"],
         destructive = true,
-        body = ParamsWithoutControl
+        body = Params
     ),
     spec!(
         "system",
@@ -781,7 +780,7 @@ pub const ACTION_SPECS: &[ActionSpec] = &[
         env = true,
         id = None,
         destructive = true,
-        body = ParamsWithoutControl
+        body = Params
     ),
     spec!(
         "system",

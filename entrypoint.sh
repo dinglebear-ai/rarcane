@@ -79,46 +79,46 @@ if [ -f "${DATA_DIR}/auth.db" ]; then
 fi
 
 # ── Validate required environment variables ────────────────────────────────────
-# TEMPLATE: Add your service's required env vars here.
-#           Comment out or remove lines for vars that have safe defaults.
-#           The goal: fail loudly here rather than silently misbehave later.
-#
-# Arcane (uncomment for a real service):
-#   if [ -z "${RARCANE_API_KEY:-}" ]; then
-#       echo "ERROR: RARCANE_API_KEY is not set." >&2
-#       echo "       Set it in your .env file or Docker environment." >&2
-#       exit 1
-#   fi
-#
-# The template binary works without API credentials (stub mode), so no
-# required vars are checked here. Uncomment the block above when you replace
-# the stub with a real upstream service.
+# Only modes that construct ArcaneClient require upstream credentials. Commands
+# such as doctor, setup, status, watch, --help, and debug-shell passthrough must
+# remain available specifically when credentials are missing or broken.
+require_arcane_credentials() {
+    if [ -z "${RARCANE_API_URL:-}" ]; then
+        echo "ERROR: RARCANE_API_URL is not set." >&2
+        echo "       Set it in your .env file or Docker environment." >&2
+        exit 1
+    fi
+    if [ -z "${RARCANE_API_KEY:-}" ]; then
+        echo "ERROR: RARCANE_API_KEY is not set." >&2
+        echo "       Set it in your .env file or Docker environment." >&2
+        exit 1
+    fi
+}
+
+exec_rarcane() {
+    if [ "$(id -u)" = "0" ]; then
+        exec gosu 1000:1000 "${BINARY}" "$@"
+    fi
+    exec "${BINARY}" "$@"
+}
 
 # ── Drop privileges and exec the service ──────────────────────────────────────
-# `gosu` (Alpine) or `gosu` (Debian/Ubuntu) replaces the current process
-# with the service binary running as UID 1000:1000.
-#
-# TEMPLATE: The Dockerfile installs gosu (Alpine) or gosu (Debian).
-#           The current Dockerfile uses Debian, so install gosu there:
-#             RUN apt-get install -y gosu
-#           and replace gosu below with gosu.
+# The Debian runtime image installs gosu; it replaces the current process with
+# the service command running as UID 1000:1000. Alpine derivatives can use
+# su-exec instead, but the checked-in Dockerfile and entrypoint must agree.
 #
 # `exec` is critical — it replaces the shell process so the binary receives
 # OS signals (SIGTERM, SIGINT) directly. Without exec, the shell would buffer
 # signals and Docker's stop timeout would kill the container ungracefully.
-#
-# TEMPLATE: Replace "gosu" with "gosu" if using a Debian-based image,
-#           or use "exec setpriv --reuid=1000 --regid=1000 --clear-groups" if
-#           neither gosu nor gosu is available.
-# TEMPLATE: This image uses Debian + gosu. For Alpine, replace "gosu" with "gosu".
 # Passthrough: if the first argument is not a known subcommand (e.g. docker run ... bash),
 # exec it directly under gosu without prepending the binary.
 case "${1:-}" in
-  serve|mcp|greet|echo|status|watch|doctor|setup|help|--help|-h|--version|"")
-    if [ "$(id -u)" = "0" ]; then
-      exec gosu 1000:1000 "${BINARY}" "$@"
-    fi
-    exec "${BINARY}" "$@"
+  serve|mcp|call|"")
+    require_arcane_credentials
+    exec_rarcane "$@"
+    ;;
+  status|watch|doctor|setup|help|--help|-h|--version|-V|version)
+    exec_rarcane "$@"
     ;;
   *)
     if [ "$(id -u)" = "0" ]; then

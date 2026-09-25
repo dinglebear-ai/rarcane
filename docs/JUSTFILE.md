@@ -1,7 +1,7 @@
 ---
 title: "Justfile"
 created: "2026-07-30"
-updated: "2026-07-30"
+updated: "2026-08-18"
 doc_type: "guide"
 status: "active"
 owner: "rarcane"
@@ -10,7 +10,7 @@ audience:
   - "agents"
 scope: "template"
 source_of_truth: false
-last_reviewed: "2026-05-15"
+last_reviewed: "2026-08-18"
 ---
 
 # Justfile
@@ -24,6 +24,7 @@ last_reviewed: "2026-05-15"
 | `just dev` | Run HTTP MCP server on loopback in no-auth dev mode (`RARCANE_MCP_NO_AUTH=true`). |
 | `just mcp` | Run stdio MCP transport (`rarcane mcp`). |
 | `just doctor` | Pre-flight environment/connectivity checks (`rarcane doctor`). |
+| `just smoke` | Credential-free local CLI smoke test (`rarcane status`). |
 | `just build` / `just build-release` | Debug/release Rust builds. |
 | `just gen-token` | Generate a random bearer token (`openssl rand -hex 32`). |
 

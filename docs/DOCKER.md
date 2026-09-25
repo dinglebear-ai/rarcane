@@ -137,31 +137,40 @@ fn default_data_dir() -> PathBuf {
 
 ## Docker entrypoint
 
-Every Docker image has an `entrypoint.sh` that runs as root, fixes permissions, validates required env vars, then drops to UID 1000:
+Every Docker image has an `entrypoint.sh` that runs as root, fixes permissions, hardens secret files, validates upstream credentials only for modes that construct `ArcaneClient`, then drops to UID 1000. Diagnostic commands such as `doctor`, `setup`, `status`, `watch`, and `--help` deliberately remain usable when credentials are missing.
 
 ```bash
 #!/bin/sh
 set -e
 DATA_DIR="${DATA_DIR:-/data}"
 
-# Validate required vars before starting
-for var in RARCANE_API_URL RARCANE_API_KEY; do
-    eval "val=\${${var}:-}"
-    [ -z "${val}" ] && { echo "FATAL: ${var} is not set" >&2; exit 1; }
-done
+require_arcane_credentials() {
+    [ -n "${RARCANE_API_URL:-}" ] || { echo "FATAL: RARCANE_API_URL is not set" >&2; exit 1; }
+    [ -n "${RARCANE_API_KEY:-}" ] || { echo "FATAL: RARCANE_API_KEY is not set" >&2; exit 1; }
+}
 
-mkdir -p "${DATA_DIR}/logs"
-chown -R 1000:1000 "${DATA_DIR}"
+mkdir -p "${DATA_DIR}"
+chown -R 1000:1000 "${DATA_DIR}" 2>/dev/null || true
 
-# Secure secret files
 for f in "${DATA_DIR}/.env" "${DATA_DIR}/auth-jwt.pem"; do
     [ -f "${f}" ] && chmod 600 "${f}" || true
 done
 
-exec su-exec 1000:1000 "$@"
+case "${1:-}" in
+  serve|mcp|call|"")
+    require_arcane_credentials
+    exec gosu 1000:1000 /usr/local/bin/rarcane "$@"
+    ;;
+  status|watch|doctor|setup|help|--help|-h|--version|-V|version)
+    exec gosu 1000:1000 /usr/local/bin/rarcane "$@"
+    ;;
+  *)
+    exec gosu 1000:1000 "$@"
+    ;;
+esac
 ```
 
-Key principles: fail fast, check every assumption, `exec` not `run` (so PID 1 is the actual service), no signal traps.
+Key principles: fail fast for commands that actually need the upstream, keep repair/diagnostic paths available during failures, avoid `eval` around secrets, and use `exec` so PID 1 is the actual service. The checked-in Debian image uses `gosu`; Alpine derivatives should switch both Dockerfile and entrypoint to `su-exec` together.
 
 ## Health and auth
 

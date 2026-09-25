@@ -365,16 +365,12 @@ fn symlink_docs() -> Result<()> {
 /// Variables listed as "optional" are checked for presence but not required —
 /// the server will start without them but some features may be unavailable.
 fn check_env() -> Result<()> {
-    // TEMPLATE: Add or remove required variables for your service.
-    //   Format: (&str, &str)  →  (ENV_VAR_NAME, "description of what it's for")
-    //
-    // The template's ArcaneClient doesn't require API credentials to boot
-    // (stub mode works without them). Your real service likely does — update
-    // REQUIRED_VARS accordingly.
     const REQUIRED_VARS: &[(&str, &str)] = &[
-        // TEMPLATE: Uncomment and adapt once you have a real upstream service:
-        // ("RARCANE_API_URL", "Full base URL of the upstream service (e.g. https://api.rarcane.com/v1)"),
-        // ("RARCANE_API_KEY", "API key or bearer token for the upstream service"),
+        (
+            "RARCANE_API_URL",
+            "Full base URL of the upstream Arcane service",
+        ),
+        ("RARCANE_API_KEY", "API key for the upstream Arcane service"),
     ];
 
     // TEMPLATE: Optional variables — server boots without them but warns.
@@ -385,9 +381,9 @@ fn check_env() -> Result<()> {
         ),
         (
             "RARCANE_MCP_HOST",
-            "Bind host (default 0.0.0.0 — set to 127.0.0.1 for local-only)",
+            "Bind host (default 127.0.0.1; set explicitly for remote access)",
         ),
-        ("RARCANE_MCP_PORT", "Bind port (default 3000)"),
+        ("RARCANE_MCP_PORT", "Bind port (default 40110)"),
         (
             "RUST_LOG",
             "Log filter (e.g. info,rmcp=warn — default: info in server mode, warn in stdio/cli)",
