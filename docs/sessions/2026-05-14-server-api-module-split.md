@@ -36,7 +36,7 @@ Explored the Aurora design system and `apps/web/` Next.js app, then executed a m
 
 - `src/mcp/routes.rs` contained REST API handlers (`api_dispatch`, `health`, `status`) with no MCP-specific code — purely an organizational mistake from the initial commit
 - `src/mcp/rmcp_server.rs:372` had `allowed_origins` as `pub(super)`, preventing cross-module access — widened to `pub`
-- `apps/web/components.json` already had `@aurora` registry wired (`https://aurora.tootie.tv/r/{name}.json`) — no config change needed
+- `apps/web/components.json` already had `@aurora` registry wired (`https://aurora.example.internal/r/{name}.json`) — no config change needed
 - Aurora registry has 128 items: 64 UI primitives + 63 blocks + token layer; all require `aurora-tokens` as a registry dependency
 - RUSTSEC-2023-0071 (RSA Marvin Attack) present via `lab-auth → jsonwebtoken → rsa v0.9.10/v0.10.0-rc.18`; no upstream fix available
 - `deny.toml` wildcard errors were false positives: git deps with pinned `rev` and path deps have no semver version, which `cargo-deny` treats as wildcards
