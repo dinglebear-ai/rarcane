@@ -11,9 +11,14 @@ permissions:
 jobs:
   auto-merge:
     name: Auto-merge patch/minor updates
-    runs-on: ci-pool-ops
+    # Hosted, not ci-pool-ops: this job checks out nothing and only reads pinned
+    # metadata plus two GitHub API calls, so it has no reason to occupy a
+    # privileged (DinD) self-hosted runner.
+    runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: github.actor == 'dependabot[bot]'
+    if: >-
+      github.actor == 'dependabot[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: Fetch Dependabot metadata
         id: meta

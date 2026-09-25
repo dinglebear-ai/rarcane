@@ -47,8 +47,8 @@ services:
       RARCANE_MCP_NO_AUTH: "${RARCANE_MCP_NO_AUTH:-false}"
       RARCANE_MCP_TOKEN: "${RARCANE_MCP_TOKEN:?set RARCANE_MCP_TOKEN to a strong bearer token}"
     ports:
-      - "100.88.16.79:${RARCANE_MCP_HOST_PORT:-40110}:40110/tcp"
-      - "10.1.0.6:${RARCANE_MCP_HOST_PORT:-40110}:40110/tcp"
+      - "198.51.100.1:${RARCANE_MCP_HOST_PORT:-40110}:40110/tcp"
+      - "192.0.2.6:${RARCANE_MCP_HOST_PORT:-40110}:40110/tcp"
     volumes:
       - ${HOME}/.rarcane:/data
     cap_drop:

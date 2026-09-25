@@ -18,7 +18,7 @@ using the `server.json` manifest at the repo root.
 
 ## Prerequisites
 
-- You own the domain used in the `name` field (e.g. `tv.tootie` in `tv.tootie/rarcane-mcp`)
+- You own the domain used in the `name` field (e.g. `tv.nashost` in `tv.nashost/rarcane-mcp`)
 - Your Docker image is published to a container registry (e.g. `ghcr.io`)
 - Your GitHub repo is public
 
@@ -144,8 +144,8 @@ the MCP registry.
 ### "Name not in your namespace"
 
 You must authenticate for the domain or GitHub user that prefixes your server name.
-If your `name` is `tv.tootie/rarcane-mcp`, you must authenticate with DNS for
-`tv.tootie`. If your `name` is `github.com/dinglebear-ai/rarcane`, use GitHub OAuth.
+If your `name` is `tv.nashost/rarcane-mcp`, you must authenticate with DNS for
+`tv.nashost`. If your `name` is `github.com/dinglebear-ai/rarcane`, use GitHub OAuth.
 
 ### "Invalid schema"
 
@@ -168,6 +168,6 @@ Push to GHCR first, then publish to the registry.
 |---|---|
 | `yourdomain.com/<name>` | DNS TXT record proof |
 | `github.com/<org>/<name>` | GitHub OAuth |
-| `tv.tootie/<name>` | DNS TXT record (author's domain — do not use) |
+| `tv.nashost/<name>` | DNS TXT record (author's domain — do not use) |
 
-<!-- TEMPLATE: Remove the tv.tootie row from the table above if you don't own that domain. -->
+<!-- TEMPLATE: Remove the tv.nashost row from the table above if you don't own that domain. -->
